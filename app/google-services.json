@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "191693923656",
+    "project_id": "ghpc-d43d4",
+    "storage_bucket": "ghpc-d43d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191693923656:android:c9661ef9679a61813c3f7d",
+        "android_client_info": {
+          "package_name": "com.lynhill.ghpc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "191693923656-6umnbnihetkc40scv8c7uhe2i1gfr9t6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxCRnWpXyTFrzR4QTUMTb8XSZs5bLxZ3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "191693923656-6umnbnihetkc40scv8c7uhe2i1gfr9t6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

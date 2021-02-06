@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">GHPC</string>
+    <string name="signup">Sign UP</string>
+    <string name="email">Enter Email</string>
+    <string name="password">Enter Password</string>
+    <string name="username">Enter Name</string>
+    <string name="signupbtn">Register</string>
+    <string name="nothaveaccount">Have an Account ?<font fgcolor='#87C443'><b> Sign In</b></font></string>
+    <string name="enter_adress">Enter Adress</string>
+    <string name="enter_address">Enter Address</string>
+    <string name="scan">Scan customer ID</string>
+    <string name="txt_message">" Temp "</string>
+</resources>
