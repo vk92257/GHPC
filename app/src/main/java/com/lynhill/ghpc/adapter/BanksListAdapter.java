@@ -1,6 +1,7 @@
 package com.lynhill.ghpc.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lynhill.ghpc.R;
+import com.lynhill.ghpc.activities.MyWebView;
 import com.lynhill.ghpc.listener.UserInfoListener;
 
 import java.util.ArrayList;
@@ -51,8 +53,17 @@ public class BanksListAdapter extends RecyclerView.Adapter<BanksListAdapter.MyVi
 
         String text = "<a href='" + hyperLink.get(position) + "'> Apply for loan now ! </a>";
         holder.hyperLink.setText(Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT));
-        holder.hyperLink.setMovementMethod(LinkMovementMethod.getInstance());
+//        holder.hyperLink.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.hyperLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MyWebView.class);
+                intent.putExtra("url", hyperLink.get(position));
+                context.startActivity(intent);
+            }
+        });
         holder.textView.setText(s);
+
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
