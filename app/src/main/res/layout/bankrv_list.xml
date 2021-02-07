@@ -35,14 +35,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/user_text"
+        android:text="click here"
         android:layout_toEndOf="@+id/profile_image"
         android:fontFamily="@font/roboto_mono"
-        android:linksClickable="true"
-        android:paddingStart="8dp"
-        android:paddingEnd="14dp"
-        android:paddingBottom="8dp"
-        android:text="Hello"
-        android:textColor="@color/black"
-        android:textSize="12sp" />
+        />
 
 </RelativeLayout>
