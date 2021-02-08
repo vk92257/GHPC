@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    android:orientation="vertical"
-    tools:context=".activities.MainDashBoard">
+    tools:context=".activities.SampleImagesActivity">
 
     <RelativeLayout
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_marginStart="3dp"
         android:layout_marginEnd="3dp"
         android:background="#50585858"
@@ -36,44 +36,48 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Admin Panel"
+            android:fontFamily="@font/roboto_mono"
+            android:text="Sample images"
             android:textColor="@color/white"
             android:textSize="17sp"
             android:visibility="visible" />
 
         <ImageView
             android:id="@+id/add_employee"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
             android:layout_marginEnd="10dp"
             android:onClick="addEmployee"
-            android:src="@drawable/ic_baseline_add_24"
-            android:tint="@color/primary" />
+            android:src="@drawable/ic_baseline_camera_24"
+            android:tint="@color/primary"
+            android:visibility="visible" />
 
     </RelativeLayout>
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/backgroundImage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="20dp"
-        android:gravity="center"
-        android:padding="40dp"
-        android:src="@drawable/ic_add_user"
-        android:text="@string/signup"
-        android:textColor="@color/primary"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:visibility="visible" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</FrameLayout>
 
-</LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/toolbar"
+        android:id="@+id/sample_image_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+   <Button
+       android:onClick="upload"
+       android:layout_alignParentRight="true"
+       android:layout_alignParentBottom="true"
+       android:layout_marginBottom="30dp"
+       android:text="Upload"
+       android:layout_marginRight="30dp"
+       android:paddingStart="10dp"
+       android:paddingTop="4dp"
+       android:paddingBottom="4dp"
+       android:paddingEnd="10dp"
+       android:layout_width="150dp"
+       android:layout_height="60dp"/>
+
+
+</RelativeLayout>

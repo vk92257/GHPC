@@ -14,7 +14,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.lynhill.ghpc.R;
@@ -174,13 +173,13 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         }
 
         if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString())) {
-           if (phoneNumber.getEditText().getText().length()<10){
+            if (phoneNumber.getEditText().getText().length() < 10) {
                 phoneNumber.setError("enter a valid phone number");
-           }else{
-               stringPhoneNumber = phoneNumber.getEditText().getText().toString();
-               phoneNumber.setErrorEnabled(false);
+            } else {
+                stringPhoneNumber = phoneNumber.getEditText().getText().toString();
+                phoneNumber.setErrorEnabled(false);
                 storageManager.setUserPhoneNumber(stringPhoneNumber);
-           }
+            }
         } else {
             phoneNumber.setError("Enter your phone number.");
             return;
@@ -201,7 +200,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
     }
 
     private void startBankActivity() {
-        Intent intent = new Intent(this, Banks.class);
+        Intent intent = new Intent(this, BankActivity.class);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         startActivity(intent);
     }
@@ -227,10 +226,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
             }
         });
         dialog.show();
-
-
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

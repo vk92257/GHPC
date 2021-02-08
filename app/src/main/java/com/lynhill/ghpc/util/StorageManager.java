@@ -55,6 +55,12 @@ public class StorageManager {
         editor.putString("phone", token);
         editor.commit();
     }
-
+    public String getUserSignature() {
+        return preferences.getString("sign", "");
+    }
+    public void setUserSignature(String token) {
+        editor.putString("sign", token);
+        editor.commit();
+    }
 
 }
