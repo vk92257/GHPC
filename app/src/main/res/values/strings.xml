@@ -10,4 +10,5 @@
     <string name="enter_address">Enter Address</string>
     <string name="scan">Scan customer ID</string>
     <string name="txt_message">" Temp "</string>
+    <string name="dialog_heading_msg">Select</string>
 </resources>

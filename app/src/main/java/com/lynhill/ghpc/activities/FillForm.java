@@ -1,10 +1,15 @@
 package com.lynhill.ghpc.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,6 +47,7 @@ public class FillForm extends AppCompatActivity {
     private String currentPhotoPath;
     private boolean haveSignature = false;
     private String TAG = FillForm.class.getSimpleName();
+    private int requestPermissionID=769;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +73,22 @@ public class FillForm extends AppCompatActivity {
         signatureClikc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchTakePictureIntent();
+               checkPermissions();
             }
         });
     }
 
+    public void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            dispatchTakePictureIntent();
+        } else {
+            requestStoragePermission();
+        }
+    }
+
+    public void requestStoragePermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, requestPermissionID);
+    }
 
     private void dispatchTakePictureIntent() {
         Log.e(TAG, "dispatchTakePictureIntent: ");
@@ -236,5 +253,21 @@ public class FillForm extends AppCompatActivity {
         matcher = pattern.matcher(email);
         return matcher.matches();
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        Log.e(TAG, "onRequestPermissionsResult: " + requestCode + "  ==   " + requestPermissionID);
+        if (grantResults.length > 0 && requestCode == requestPermissionID) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+                // Do_SOme_Operation();
+//                Toast.makeText(this, " granted", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            finish();
+//            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
 
+    }
 }

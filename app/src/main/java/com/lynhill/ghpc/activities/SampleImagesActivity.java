@@ -3,6 +3,7 @@ package com.lynhill.ghpc.activities;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +30,7 @@ import java.util.Date;
 
 import io.paperdb.Paper;
 
-public class SampleImagesActivity extends AppCompatActivity {
+public class SampleImagesActivity extends BaseActivity {
     private static final String TAG = SampleImagesActivity.class.getSimpleName();
     private static final int REQUEST_CAMERA_CODE = 250;
     RecyclerView sampleImages;
@@ -111,6 +112,7 @@ public class SampleImagesActivity extends AppCompatActivity {
     private void setUpRv() {
         sampleImagesList = new ArrayList<>();
         sampleImages.setLayoutManager(new LinearLayoutManager(this));
+//        sampleImages.setLayoutManager(new GridLayoutManager(this,2));
         sampleImageAdapter = new SampleImageAdapter(sampleImagesList, this);
         sampleImages.setAdapter(sampleImageAdapter);
     }

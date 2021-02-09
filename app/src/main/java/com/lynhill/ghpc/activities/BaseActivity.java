@@ -15,7 +15,6 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 public class BaseActivity extends AppCompatActivity {
 
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
