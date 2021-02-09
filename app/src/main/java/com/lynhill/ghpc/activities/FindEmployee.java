@@ -17,13 +17,17 @@ import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.lynhill.ghpc.R;
+import com.lynhill.ghpc.adapter.AddMoreAdapter;
 import com.lynhill.ghpc.adapter.UserDataAdapter;
 import com.lynhill.ghpc.listener.UserInfoListener;
+import com.lynhill.ghpc.util.Constants;
 import com.lynhill.ghpc.util.StorageManager;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.paperdb.Paper;
 
 public class FindEmployee extends BaseActivity implements UserInfoListener {
     private static final String TAG = FindEmployee.class.getSimpleName();
@@ -32,11 +36,16 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
     private int OCR_DATA_REQUEST = 675;
     private UserDataAdapter userDataAdapter;
     private ArrayList<String> strings;
-    private ImageView fillName, fillAddress, fillDOB;
+    private ImageView fillName, fillAddress, fillDOB, addPhoneNumber, addEmail;
     private Dialog dialog;
     private TextView solor, roofing, hvac;
     private String project = "";
     String stringName, stringAddress, stringDob, stringEmail, stringPhoneNumber;
+    ArrayList<String> phoneArrayList = new ArrayList<>();
+    ArrayList<String> emailArrayList = new ArrayList<>();
+    AddMoreAdapter phoneAdapter;
+    AddMoreAdapter emailAdapter;
+    private RecyclerView emailList, phoneList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,8 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
     }
 
     private void findViews() {
+        addPhoneNumber = findViewById(R.id.add_phone);
+        addEmail = findViewById(R.id.add_email);
         scanCode = findViewById(R.id.scan_code);
         userName = findViewById(R.id.username_til);
         address = findViewById(R.id.user_address_layout);
@@ -58,13 +69,48 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         solor = findViewById(R.id.solar);
         hvac = findViewById(R.id.hvac);
         roofing = findViewById(R.id.roofing);
+        emailList = findViewById(R.id.email_list);
+        phoneList = findViewById(R.id.phone_list);
         clickListener();
+        addingListView();
 //        showDialog();
     }
 
+    private void addingListView() {
+        phoneList.setLayoutManager(new LinearLayoutManager(this));
+        emailList.setLayoutManager(new LinearLayoutManager(this));
+//    phoneAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, phoneArrayList);
+        phoneAdapter = new AddMoreAdapter(phoneArrayList, this);
+//    emailAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, emailArrayList);
+        emailAdapter = new AddMoreAdapter(emailArrayList, this);
+        phoneList.setAdapter(phoneAdapter);
+        emailList.setAdapter(emailAdapter);
+    }
 
     private void clickListener() {
         // scan click listener on find views
+        addPhoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                phoneArrayList.add(phoneNumber.getEditText().getText().toString());
+                phoneNumber.getEditText().setText("");
+                phoneAdapter.notifyDataSetChanged();
+            }
+        });
+        addEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isEmailValid(email.getEditText().getText().toString())) {
+                    emailArrayList.add(email.getEditText().getText().toString());
+                    email.getEditText().setText("");
+                    emailAdapter.notifyDataSetChanged();
+                    email.setErrorEnabled(false);
+                } else {
+                    email.setError("Email is invalid");
+                }
+            }
+        });
+
         scanCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,20 +123,20 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         fillName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCustomDialog(1,"Name");
+                showCustomDialog(1, "Name");
 
             }
         });
         fillDOB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCustomDialog(3,"Date of birth");
+                showCustomDialog(3, "Date of birth");
             }
         });
         fillAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCustomDialog(2,"Address");
+                showCustomDialog(2, "Address");
             }
         });
 
@@ -127,7 +173,6 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
 //                hvac .setBackgroundColor(getResources().getColor(R.color.darkGray));
             }
         });
-
     }
 
     public void Signup_click(View view) {
@@ -157,28 +202,37 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
             return;
         }
 
-        if (!TextUtils.isEmpty(email.getEditText().getText().toString())) {
-            if (isEmailValid(email.getEditText().getText().toString())) {
-                stringEmail = email.getEditText().getText().toString();
-                email.setErrorEnabled(false);
-                storageManager.setUserEmail(stringEmail);
+        if (!TextUtils.isEmpty(email.getEditText().getText().toString()) || !emailArrayList.isEmpty()) {
+            if (!TextUtils.isEmpty(email.getEditText().getText().toString())) {
+                if (isEmailValid(email.getEditText().getText().toString())) {
+                    stringEmail = email.getEditText().getText().toString();
+                    email.setErrorEnabled(false);
+                    storageManager.setUserEmail(stringEmail);
+                } else {
+                    email.setError("Enter your valid e-mail.");
+                    return;
+                }
             } else {
-                email.setError("Enter your valid e-mail.");
-                return;
+                email.setErrorEnabled(false);
             }
+
 
         } else {
             email.setError("Enter your e-mail.");
             return;
         }
 
-        if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString())) {
-            if (phoneNumber.getEditText().getText().length() < 10) {
-                phoneNumber.setError("enter a valid phone number");
+        if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString()) || !phoneArrayList.isEmpty()) {
+            if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString())) {
+                if (phoneNumber.getEditText().getText().length() < 10) {
+                    phoneNumber.setError("enter a valid phone number");
+                } else {
+                    stringPhoneNumber = phoneNumber.getEditText().getText().toString();
+                    phoneNumber.setErrorEnabled(false);
+                    storageManager.setUserPhoneNumber(stringPhoneNumber);
+                }
             } else {
-                stringPhoneNumber = phoneNumber.getEditText().getText().toString();
-                phoneNumber.setErrorEnabled(false);
-                storageManager.setUserPhoneNumber(stringPhoneNumber);
+
             }
         } else {
             phoneNumber.setError("Enter your phone number.");
@@ -187,6 +241,8 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         if (TextUtils.isEmpty(project.trim())) {
             return;
         }
+        Paper.book().write(Constants.PAPER_EMAIL, emailArrayList);
+        Paper.book().write(Constants.PAPER_CONTACT, phoneArrayList);
         startBankActivity();
     }
 
@@ -205,7 +261,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         startActivity(intent);
     }
 
-    public void showCustomDialog(int p,String token) {
+    public void showCustomDialog(int p, String token) {
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -215,7 +271,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         userDataAdapter.onPress(this::onClick);
         TextView dialogHeading = dialog.findViewById(R.id.txt_dia);
-       dialogHeading.setText(getString(R.string.dialog_heading_msg)+" "+token+".");
+        dialogHeading.setText(getString(R.string.dialog_heading_msg) + " " + token + ".");
         ImageView close = dialog.findViewById(R.id.close);
         recyclerView.setAdapter(userDataAdapter);
         recyclerView.setHasFixedSize(true);
@@ -229,6 +285,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         });
         dialog.show();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -240,7 +297,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
                 strings = data.getStringArrayListExtra("user_info");
                 if (strings != null) {
                     showFillFormOption();
-                    showCustomDialog(1,"Name");
+                    showCustomDialog(1, "Name");
                 }
             }
         }

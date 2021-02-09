@@ -6,18 +6,19 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 public class Representatives implements Parcelable {
-    public Representatives(Parcel in) {
-        name = in.readString();
-        address = in.readString();
-        dob = in.readString();
-        emali = in.readString();
-        phoneNumber = in.readString();
-        signature = in.readString();
-        sampleImages = in.createStringArrayList();
-    }
 
     public Representatives() {
 
+    }
+
+    protected Representatives(Parcel in) {
+        name = in.readString();
+        address = in.readString();
+        dob = in.readString();
+        emali = in.createStringArrayList();
+        phoneNumber = in.createStringArrayList();
+        signature = in.readString();
+        sampleImages = in.createStringArrayList();
     }
 
     @Override
@@ -25,8 +26,8 @@ public class Representatives implements Parcelable {
         dest.writeString(name);
         dest.writeString(address);
         dest.writeString(dob);
-        dest.writeString(emali);
-        dest.writeString(phoneNumber);
+        dest.writeStringList(emali);
+        dest.writeStringList(phoneNumber);
         dest.writeString(signature);
         dest.writeStringList(sampleImages);
     }
@@ -72,19 +73,18 @@ public class Representatives implements Parcelable {
         this.dob = dob;
     }
 
-    public String getEmali() {
+    public ArrayList<String> getEmali() {
         return emali;
     }
-
-    public void setEmali(String emali) {
+    public void setEmali(ArrayList<String> emali) {
         this.emali = emali;
     }
 
-    public String getPhoneNumber() {
+    public ArrayList<String> getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(ArrayList<String> phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -107,8 +107,8 @@ public class Representatives implements Parcelable {
     String name;
     String address;
     String dob;
-    String emali;
-    String phoneNumber;
+    ArrayList<String> emali;
+    ArrayList<String> phoneNumber;
     String signature;
     ArrayList<String> sampleImages;
 }
