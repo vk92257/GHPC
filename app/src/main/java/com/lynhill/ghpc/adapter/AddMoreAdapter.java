@@ -1,6 +1,5 @@
 package com.lynhill.ghpc.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,19 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.lynhill.ghpc.R;
 import com.lynhill.ghpc.listener.UserInfoListener;
-import com.lynhill.ghpc.pojo.Representatives;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class RepAdapter extends RecyclerView.Adapter<RepAdapter.MyViewHolder> {
+public class AddMoreAdapter extends RecyclerView.Adapter<AddMoreAdapter.MyViewHolder> {
 
     private Context context;
-    private ArrayList<Representatives> data;
+    private ArrayList<String> data;
     private UserInfoListener userInfoListener;
 
-    public RepAdapter(ArrayList<Representatives> data, Context context) {
+    public AddMoreAdapter(ArrayList<String> data, Context context) {
         this.context = context;
         this.data = data;
     }
@@ -38,33 +36,25 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.MyViewHolder> {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rep_rv, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
         return new MyViewHolder(view);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Representatives rep = data.get(position);
-        holder.username.setText(rep.getName());
-        holder.email.setText(rep.getEmali().get(0));
-        holder.address.setText(rep.getAddress());
-        holder.phone.setText(" "+rep.getPhoneNumber().get(0));
+        String s = data.get(position);
+       holder.textView.setText(s);
     }
 
     @Override
     public int getItemCount() {
         return data.size();
     }
-
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView username, email, phone,address;
+        private TextView textView;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            username = itemView.findViewById(R.id.userName);
-            phone = itemView.findViewById(R.id.phone);
-            email = itemView.findViewById(R.id.email);
-            address= itemView.findViewById(R.id.address);
+            textView = itemView.findViewById(android.R.id.text1);
         }
     }
 }

@@ -224,64 +224,97 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/email_til"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:layout_marginBottom="7dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/email_tiet"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/round_corner_btn"
-                        android:hint="@string/email"
-                        android:inputType="textEmailAddress"
-                        android:paddingStart="10dp"
-                        android:textColorHint="@color/white" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </FrameLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/user_phone_number_layout"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:layout_marginBottom="7dp">
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/user_phone_number"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/round_corner_btn"
-                    android:hint="Enter phone Number"
-                    android:inputType="number"
-                    android:maxLength="10"
-                    android:textColorHint="@color/white" />
-            </com.google.android.material.textfield.TextInputLayout>
-            <!--        <com.google.android.material.textfield.TextInputLayout-->
-            <!--            android:visibility="gone"-->
-            <!--            android:id="@+id/pwd_til"-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_marginTop="5dp"-->
-            <!--            app:endIconMode="password_toggle">-->
+                    android:layout_height="wrap_content">
 
-            <!--            <com.google.android.material.textfield.TextInputEditText-->
-            <!--                android:id="@+id/pwd_tiet"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:hint="@string/password"-->
-            <!--                android:inputType="textPassword"-->
-            <!--                android:paddingLeft="5dp"-->
-            <!--                android:textColorHint="@color/white" />-->
-            <!--        </com.google.android.material.textfield.TextInputLayout>-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/email_til"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginBottom="7dp">
 
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/email_tiet"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/round_corner_btn"
+                            android:hint="@string/email"
+                            android:inputType="textEmailAddress"
+                            android:paddingStart="10dp"
+                            android:textColorHint="@color/white" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/add_email"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center|right"
+                        android:layout_marginEnd="10sp"
+                        android:padding="9.5dp"
+                        android:src="@drawable/ic_baseline_add_24"
+                        android:tint="@color/primary"
+                        android:visibility="visible" />
+
+                </FrameLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/email_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/user_phone_number_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginBottom="7dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/user_phone_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/round_corner_btn"
+                            android:hint="Enter phone Number"
+                            android:inputType="number"
+                            android:maxLength="10"
+                            android:textColorHint="@color/white" />
+
+
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/add_phone"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center|right"
+                        android:layout_marginEnd="10sp"
+                        android:padding="9.5dp"
+                        android:src="@drawable/ic_baseline_add_24"
+                        android:tint="@color/primary"
+                        android:visibility="visible" />
+                </FrameLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/phone_list"
+                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -355,9 +388,9 @@
 
                 <ImageView
                     android:id="@+id/signature"
-                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/signature_click"

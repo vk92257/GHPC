@@ -21,6 +21,7 @@ import com.lynhill.ghpc.BuildConfig;
 import com.lynhill.ghpc.R;
 import com.lynhill.ghpc.adapter.SampleImageAdapter;
 import com.lynhill.ghpc.pojo.Representatives;
+import com.lynhill.ghpc.util.Constants;
 import com.lynhill.ghpc.util.StorageManager;
 
 import java.io.File;
@@ -80,7 +81,7 @@ public class SampleImagesActivity extends BaseActivity {
         String imageFileName;
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File filename;
-        imageFileName = "JPEG_" + timeStamp + "_";
+        imageFileName = "."+StorageManager.getInstance(this).getUserName()+timeStamp + "_";
         filename = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -141,16 +142,16 @@ public class SampleImagesActivity extends BaseActivity {
         } else {
             Log.e(TAG, "upload: error in dob ");
         }
-        if (!TextUtils.isEmpty(st.getUserEmail())) {
-            rep.setEmali(st.getUserEmail());
-        } else {
-            Log.e(TAG, "upload: error in email ");
-        }
-        if (!TextUtils.isEmpty(st.getUserPhoneNumber())) {
-            rep.setPhoneNumber(st.getUserPhoneNumber());
-        } else {
-            Log.e(TAG, "upload: error in phone number ");
-        }
+//        if (!TextUtils.isEmpty(st.getUserEmail())) {
+//            rep.setEmali(st.getUserEmail());
+//        } else {
+//            Log.e(TAG, "upload: error in email ");
+//        }
+//        if (!TextUtils.isEmpty(st.getUserPhoneNumber())) {
+//            rep.setPhoneNumber(st.getUserPhoneNumber());
+//        } else {
+//            Log.e(TAG, "upload: error in phone number ");
+//        }
         if (!TextUtils.isEmpty(st.getUserSignature())) {
             rep.setSignature(st.getUserSignature());
         } else {
@@ -171,6 +172,10 @@ public class SampleImagesActivity extends BaseActivity {
             Log.e(TAG, "upload: list is not there");
 
         }
+            rep.setPhoneNumber(Paper.book().read(Constants.PAPER_CONTACT));
+            rep.setEmali(Paper.book().read(Constants.PAPER_EMAIL));
+//        if ()
+
         Paper.book().write("rep", list);
         startActivity(new Intent(this, MainDashBoard.class));
         finish();
