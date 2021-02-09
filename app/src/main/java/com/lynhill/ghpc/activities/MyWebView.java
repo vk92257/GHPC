@@ -13,7 +13,7 @@ import android.webkit.WebViewClient;
 
 import com.lynhill.ghpc.R;
 
-public class MyWebView extends AppCompatActivity {
+public class MyWebView extends BaseActivity {
     private static final String TAG = MyWebView.class.getSimpleName();
     WebView webView;
 

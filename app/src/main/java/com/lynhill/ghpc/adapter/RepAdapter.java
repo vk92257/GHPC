@@ -1,5 +1,6 @@
 package com.lynhill.ghpc.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,11 +42,14 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.MyViewHolder> {
         return new MyViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-       Representatives rep = data.get(position);
+        Representatives rep = data.get(position);
         holder.username.setText(rep.getName());
         holder.email.setText(rep.getEmali());
+        holder.address.setText(rep.getAddress());
+        holder.phone.setText(" "+rep.getPhoneNumber());
     }
 
     @Override
@@ -54,12 +58,13 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.MyViewHolder> {
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-       TextView  username , email ;
-
+        TextView username, email, phone,address;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             username = itemView.findViewById(R.id.userName);
+            phone = itemView.findViewById(R.id.phone);
             email = itemView.findViewById(R.id.email);
+            address= itemView.findViewById(R.id.address);
         }
     }
 }

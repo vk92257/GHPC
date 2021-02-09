@@ -77,20 +77,20 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         fillName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCustomDialog(1);
+                showCustomDialog(1,"Name");
 
             }
         });
         fillDOB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCustomDialog(3);
+                showCustomDialog(3,"Date of birth");
             }
         });
         fillAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCustomDialog(2);
+                showCustomDialog(2,"Address");
             }
         });
 
@@ -205,7 +205,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         startActivity(intent);
     }
 
-    public void showCustomDialog(int p) {
+    public void showCustomDialog(int p,String token) {
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -214,6 +214,8 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         userDataAdapter = new UserDataAdapter(strings, this, p);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         userDataAdapter.onPress(this::onClick);
+        TextView dialogHeading = dialog.findViewById(R.id.txt_dia);
+       dialogHeading.setText(getString(R.string.dialog_heading_msg)+" "+token+".");
         ImageView close = dialog.findViewById(R.id.close);
         recyclerView.setAdapter(userDataAdapter);
         recyclerView.setHasFixedSize(true);
@@ -227,7 +229,6 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         });
         dialog.show();
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -239,7 +240,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
                 strings = data.getStringArrayListExtra("user_info");
                 if (strings != null) {
                     showFillFormOption();
-                    showCustomDialog(1);
+                    showCustomDialog(1,"Name");
                 }
             }
         }

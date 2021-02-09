@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_marginStart="3dp"
         android:layout_marginEnd="3dp"
         android:background="#50585858"
@@ -53,27 +53,46 @@
             android:tint="@color/primary" />
 
     </RelativeLayout>
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/backgroundImage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="20dp"
-        android:gravity="center"
-        android:padding="40dp"
-        android:src="@drawable/ic_add_user"
-        android:text="@string/signup"
+
+    <TextView
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="20dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingRight="25dp"
+        android:background="#70656565"
+        android:textSize="20sp"
+        android:paddingStart="25dp"
         android:textColor="@color/primary"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:visibility="visible" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
-        android:layout_width="match_parent"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Representatives"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-</FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/backgroundImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="20dp"
+            android:gravity="center"
+            android:padding="40dp"
+            android:src="@drawable/ic_add_user"
+            android:text="@string/signup"
+            android:textColor="@color/primary"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp" />
+    </FrameLayout>
 
 </LinearLayout>
