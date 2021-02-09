@@ -3,7 +3,6 @@ package com.lynhill.ghpc.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lynhill.ghpc.R;
 import com.lynhill.ghpc.activities.MyWebView;
+import com.lynhill.ghpc.listener.BankClickListener;
 import com.lynhill.ghpc.listener.UserInfoListener;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class BanksListAdapter extends RecyclerView.Adapter<BanksListAdapter.MyVi
     private ArrayList<String> data;
     private ArrayList<Integer> banks;
     private ArrayList<String> hyperLink;
-    private UserInfoListener userInfoListener;
+    private BankClickListener userInfoListener;
 
     public BanksListAdapter(ArrayList<String> hyperlink, ArrayList<String> data, ArrayList<Integer> bank, Context context) {
         this.context = context;
@@ -35,7 +35,7 @@ public class BanksListAdapter extends RecyclerView.Adapter<BanksListAdapter.MyVi
         this.banks = bank;
     }
 
-    public void onPress(UserInfoListener userInfoListener) {
+    public void onPress(BankClickListener userInfoListener) {
         this.userInfoListener = userInfoListener;
     }
 
@@ -57,17 +57,17 @@ public class BanksListAdapter extends RecyclerView.Adapter<BanksListAdapter.MyVi
         holder.hyperLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, MyWebView.class);
-                intent.putExtra("url", hyperLink.get(position));
-                context.startActivity(intent);
+                userInfoListener.onBankCLikck(position);
+//                Intent intent = new Intent(context, MyWebView.class);
+//                intent.putExtra("url", hyperLink.get(position));
+//                context.startActivity(intent);
             }
         });
         holder.textView.setText(s);
-
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "" + s, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "" + s, Toast.LENGTH_SHORT).show();
 
             }
         });

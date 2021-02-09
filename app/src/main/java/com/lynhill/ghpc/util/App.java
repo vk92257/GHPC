@@ -11,18 +11,21 @@ import java.lang.reflect.Method;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
+import io.paperdb.Paper;
 
 public class App extends Application {
-   private static App instance;
+    private static App instance;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        if(Build.VERSION.SDK_INT>=24){
-            try{
+        Paper.init(this);
+        if (Build.VERSION.SDK_INT >= 24) {
+            try {
                 Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
                 m.invoke(null);
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

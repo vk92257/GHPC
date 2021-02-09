@@ -1,17 +1,27 @@
 package com.lynhill.ghpc.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.lynhill.ghpc.R;
 import com.lynhill.ghpc.adapter.BanksListAdapter;
+import com.lynhill.ghpc.listener.BankClickListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-public class Banks extends AppCompatActivity {
+import io.paperdb.Paper;
+
+public class BankActivity extends AppCompatActivity implements BankClickListener {
+    private static final int BANK_CODE = 234;
     private RecyclerView bankList;
     private BanksListAdapter banksListAdapter;
     private ArrayList<String> bankname;
@@ -28,13 +38,13 @@ public class Banks extends AppCompatActivity {
 
     private void findViews() {
         bankList = findViewById(R.id.bank_list);
-
         addData();
         bankRecyclerView();
     }
 
     private void bankRecyclerView() {
-        banksListAdapter = new BanksListAdapter(hyperlink,bankname, bankIcon, this);
+        banksListAdapter = new BanksListAdapter(hyperlink, bankname, bankIcon, this);
+        banksListAdapter.onPress(this::onBankCLikck);
         bankList.setLayoutManager(new LinearLayoutManager(this));
         bankList.setAdapter(banksListAdapter);
         bankList.setHasFixedSize(true);
@@ -88,5 +98,33 @@ public class Banks extends AppCompatActivity {
         bankIcon.add(R.drawable.union_bank_of_india);
         bankname.add("Union Bank Of India");
         hyperlink.add("https://www.unionbankofindia.co.in/english/personal-loans.aspx");
+    }
+
+
+    @Override
+    public void onBankCLikck(int position) {
+        Log.e("TAG", "onBankCLikck: reached the clickListener " + position);
+        Intent intent = new Intent(this, MyWebView.class);
+        intent.putExtra("url", hyperlink.get(position));
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        startActivityForResult(intent, BANK_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        List<HashMap<String, ArrayList<String>>> list = new ArrayList<>();
+
+        Paper.book().write("merilist", list);
+
+        list = Paper.book().read("merilidt", new ArrayList<>());
+
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == BANK_CODE) {
+            Intent intent = new Intent(this, FillForm.class);
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            startActivity(intent);
+        }
     }
 }
