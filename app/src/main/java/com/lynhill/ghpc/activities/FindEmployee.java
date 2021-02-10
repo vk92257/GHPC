@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -62,6 +63,11 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
 //        showDialog();
     }
 
+    //    onclick's
+    public void backpress(View view){
+        finish();
+    }
+
 
     private void clickListener() {
         // scan click listener on find views
@@ -71,6 +77,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
                 Intent intent = new Intent(FindEmployee.this, OCR.class);
                 overridePendingTransition(R.anim.fadeout, R.anim.fadeout);
                 startActivityForResult(intent, OCR_DATA_REQUEST);
+
             }
         });
 
@@ -97,9 +104,14 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         solor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                solor.setBackgroundColor(getResources().getColor(R.color.primary));
-                roofing.setBackgroundColor(getResources().getColor(R.color.black));
-                hvac.setBackgroundColor(getResources().getColor(R.color.black));
+//                solor.setBackgroundColor(getResources().getColor(R.color.primary));
+//                roofing.setBackgroundColor(getResources().getColor(R.color.light_black));
+//                hvac.setBackgroundColor(getResources().getColor(R.color.light_black));
+
+                solor.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.primary)));
+                roofing.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
+                hvac.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
+
                 project = solor.getText().toString();
 //                roofing.setBackgroundColor(getResources().getColor(R.color.darkGray));
 //                hvac.setBackgroundColor(getResources().getColor(R.color.darkGray));
@@ -108,9 +120,14 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         hvac.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                solor.setBackgroundColor(getResources().getColor(R.color.black));
-                roofing.setBackgroundColor(getResources().getColor(R.color.black));
-                hvac.setBackgroundColor(getResources().getColor(R.color.primary));
+//                solor.setBackgroundColor(getResources().getColor(R.color.light_black));
+//                roofing.setBackgroundColor(getResources().getColor(R.color.light_black));
+//                hvac.setBackgroundColor(getResources().getColor(R.color.primary));
+
+                solor.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
+                roofing.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
+                hvac.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.primary)));
+
                 project = hvac.getText().toString();
 //                solor.setBackgroundColor(getResources().getColor(R.color.darkGray));
 //                roofing.setBackgroundColor(getResources().getColor(R.color.darkGray));
@@ -119,9 +136,14 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         roofing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                solor.setBackgroundColor(getResources().getColor(R.color.black));
-                roofing.setBackgroundColor(getResources().getColor(R.color.primary));
-                hvac.setBackgroundColor(getResources().getColor(R.color.black));
+//                solor.setBackgroundColor(getResources().getColor(R.color.light_black));
+//                roofing.setBackgroundColor(getResources().getColor(R.color.primary));
+//                hvac.setBackgroundColor(getResources().getColor(R.color.light_black));
+
+                solor.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));;
+                roofing.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.primary)));;
+                hvac.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));;
+
                 project = roofing.getText().toString();
 //                solor.setBackgroundColor(getResources().getColor(R.color.darkGray));
 //                hvac .setBackgroundColor(getResources().getColor(R.color.darkGray));
@@ -203,6 +225,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         Intent intent = new Intent(this, BankActivity.class);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         startActivity(intent);
+        finish();
     }
 
     public void showCustomDialog(int p,String token) {

@@ -1,6 +1,7 @@
 package com.lynhill.ghpc.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +27,8 @@ public class MainDashBoard extends BaseActivity {
     private RecyclerView rv;
     private RepAdapter repAdapter;
 
+    private int numberOfColumns = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +47,8 @@ public class MainDashBoard extends BaseActivity {
     }
 
     private void recyclerview() {
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+//        rv.setLayoutManager(new LinearLayoutManager(this));
         repAdapter = new RepAdapter(repList, this);
         rv.setAdapter(repAdapter);
         rv.setHasFixedSize(true);

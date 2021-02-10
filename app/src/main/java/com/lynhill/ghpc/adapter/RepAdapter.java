@@ -2,10 +2,12 @@ package com.lynhill.ghpc.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.lynhill.ghpc.R;
+import com.lynhill.ghpc.activities.Representative_detail;
 import com.lynhill.ghpc.listener.UserInfoListener;
 import com.lynhill.ghpc.pojo.Representatives;
 
@@ -50,6 +53,15 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.MyViewHolder> {
         holder.email.setText(rep.getEmali());
         holder.address.setText(rep.getAddress());
         holder.phone.setText(" "+rep.getPhoneNumber());
+
+
+        holder.root_rl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, Representative_detail.class);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -59,12 +71,14 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.MyViewHolder> {
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView username, email, phone,address;
+        RelativeLayout root_rl;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             username = itemView.findViewById(R.id.userName);
             phone = itemView.findViewById(R.id.phone);
             email = itemView.findViewById(R.id.email);
             address= itemView.findViewById(R.id.address);
+            root_rl = itemView.findViewById(R.id.root_rl);
         }
     }
 }

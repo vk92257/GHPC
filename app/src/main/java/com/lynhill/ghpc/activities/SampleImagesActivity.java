@@ -37,6 +37,7 @@ public class SampleImagesActivity extends BaseActivity {
     private String currentPhotoPath;
     private SampleImageAdapter sampleImageAdapter;
     private ArrayList<String> sampleImagesList;
+    private int numberOfColumns =2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,13 @@ public class SampleImagesActivity extends BaseActivity {
             Log.e(TAG, "dispatchTakePictureIntent: else part");
         }
     }
+
+
+//    onclick
+    public void backpress(View view){
+        finish();
+    }
+
 
     private File createImagevideoFile() throws IOException {
         // Create an image file name
@@ -111,7 +119,9 @@ public class SampleImagesActivity extends BaseActivity {
 
     private void setUpRv() {
         sampleImagesList = new ArrayList<>();
-        sampleImages.setLayoutManager(new LinearLayoutManager(this));
+
+//        sampleImages.setLayoutManager(new LinearLayoutManager(this));
+        sampleImages.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
 //        sampleImages.setLayoutManager(new GridLayoutManager(this,2));
         sampleImageAdapter = new SampleImageAdapter(sampleImagesList, this);
         sampleImages.setAdapter(sampleImageAdapter);
@@ -172,7 +182,9 @@ public class SampleImagesActivity extends BaseActivity {
 
         }
         Paper.book().write("rep", list);
-        startActivity(new Intent(this, MainDashBoard.class));
+        Intent intent = new Intent(this, MainDashBoard.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
         finish();
     }
 }
