@@ -7,14 +7,17 @@
     android:weightSum="5"
     tools:context="com.lynhill.ghpc.activities.OCR">
 
-
     <ImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"/>
-
-
+    <SurfaceView
+        android:visibility="gone"
+        android:id="@+id/surfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4" />
     <TextView
         android:visibility="gone"
         android:id="@+id/text_view"
@@ -32,22 +35,16 @@
        android:layout_marginTop="10dp"
         android:layout_gravity="center"
         android:id="@+id/capture_image"
-
-        android:text="capture image"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:textColor="@color/white"/>
-
+        android:text="Capture image"
+        android:layout_width="250dp"
+        android:layout_height="50dp"/>
     <Button
        android:visibility="visible"
         android:layout_gravity="center"
         android:text="Scan out Texts"
         android:elevation="3dp"
         android:id="@+id/detect_text_image"
-
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:textColor="@color/white"/>
-
+        android:layout_width="250dp"
+        android:layout_height="50dp"/>
 
 </LinearLayout>

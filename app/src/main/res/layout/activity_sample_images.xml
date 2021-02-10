@@ -3,80 +3,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:background="@color/white"
-
     android:orientation="vertical"
     tools:context=".activities.SampleImagesActivity">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/toolbarsales"
+    <RelativeLayout
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:elevation="3dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardElevation="3dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <RelativeLayout
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            >
+        android:layout_height="60dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="3dp"
+        android:background="#50585858"
+        android:elevation="10dp"
+        android:orientation="horizontal">
 
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_baseline_keyboard_backspace_24"
-                app:tint="@color/black"
-                android:onClick="backpress"/>
+        <TextView
+            android:id="@+id/not_signin"
+            fontPath="fonts/gothambold.otf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/roboto_mono"
+            android:text="Sample images"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:visibility="visible" />
 
-            <TextView
-                android:id="@+id/not_signin"
-                fontPath="fonts/gothambold.otf"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Sample images"
-                android:textColor="@color/black"
-                android:textSize="22sp"
-                android:visibility="visible"
-                android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/add_employee"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="10dp"
+            android:onClick="addEmployee"
+            android:src="@drawable/ic_baseline_camera_24"
+            android:tint="@color/primary"
+            android:visibility="visible" />
 
-            <ImageView
-                android:id="@+id/add_employee"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="10dp"
-                android:onClick="addEmployee"
-                android:src="@drawable/ic_camera_icon"
-                android:tint="@color/black"
-                android:visibility="visible" />
+    </RelativeLayout>
 
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/sample_image_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        android:layout_below="@+id/toolbarsales"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal"
-        />
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="8dp" />
 
     <Button
-        fontPath="fonts/gothambold.otf"
-
         android:layout_width="150dp"
         android:layout_height="60dp"
         android:layout_alignParentRight="true"
@@ -88,10 +63,7 @@
         android:paddingTop="4dp"
         android:paddingEnd="10dp"
         android:paddingBottom="4dp"
-
-        android:text="Upload"
-        android:textColor="@color/white" />
-
+        android:text="Upload" />
 
 
 </RelativeLayout>

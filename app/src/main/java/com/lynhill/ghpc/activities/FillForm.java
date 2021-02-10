@@ -20,8 +20,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-
-
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -49,7 +47,7 @@ import io.paperdb.Paper;
 
 import static android.provider.CalendarContract.CalendarCache.URI;
 
-public class FillForm extends BaseActivity {
+public class FillForm extends AppCompatActivity {
     private static final int REQUEST_CAMERA_CODE = 214;
     private TextInputLayout userName, address, dob, email, phoneNumber;
     String stringName, stringAddress, stringDob, stringEmail, stringPhoneNumber;
@@ -93,15 +91,6 @@ public class FillForm extends BaseActivity {
 //        }
         //        showDialog();
     }
-
-
-
-//    onclick's
-    public void backpress(View view){
-        finish();
-    }
-
-
 
     private void addingListView() {
         phoneList.setLayoutManager(new LinearLayoutManager(this));

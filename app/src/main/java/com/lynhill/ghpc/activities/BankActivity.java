@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
 
 import com.lynhill.ghpc.R;
 import com.lynhill.ghpc.adapter.BanksListAdapter;
@@ -25,7 +23,6 @@ import io.paperdb.Paper;
 public class BankActivity extends AppCompatActivity implements BankClickListener {
     private static final int BANK_CODE = 234;
     private RecyclerView bankList;
-    private ImageView backpress_id;
     private BanksListAdapter banksListAdapter;
     private ArrayList<String> bankname;
     private ArrayList<String> hyperlink;
@@ -41,19 +38,8 @@ public class BankActivity extends AppCompatActivity implements BankClickListener
 
     private void findViews() {
         bankList = findViewById(R.id.bank_list);
-        backpress_id = findViewById(R.id.backpress_id);
-        onclicked();
         addData();
         bankRecyclerView();
-    }
-
-    private void onclicked() {
-        backpress_id.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     private void bankRecyclerView() {

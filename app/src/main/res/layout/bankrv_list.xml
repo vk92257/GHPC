@@ -4,7 +4,7 @@
     android:layout_height="60dp"
     android:layout_marginTop="2dp"
     android:layout_marginBottom="2dp"
-    android:background="#F8F6F6">
+    android:background="#ddd">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/profile_image"
@@ -14,7 +14,6 @@
         android:layout_centerInParent="true"
         android:layout_margin="5dp"
         android:layout_marginStart="10sp"
-        app:civ_border_color="@color/black"
         android:src="@drawable/bank_of_baroda" />
 
     <TextView
