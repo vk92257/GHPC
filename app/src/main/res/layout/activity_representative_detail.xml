@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    tools:context=".activities.Representative_detail"
     android:background="@color/white"
-
-    android:orientation="vertical"
-    tools:context=".activities.SampleImagesActivity">
-
+    >
     <androidx.cardview.widget.CardView
         android:id="@+id/toolbarsales"
         android:layout_width="match_parent"
@@ -43,55 +41,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Sample images"
+                android:fontFamily="@font/roboto_mono"
+                android:text="Detail"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:visibility="visible"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/add_employee"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="10dp"
-                android:onClick="addEmployee"
-                android:src="@drawable/ic_camera_icon"
-                android:tint="@color/black"
-                android:visibility="visible" />
-
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@+id/toolbarsales"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sample_image_rv"
+        >
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        android:layout_below="@+id/toolbarsales"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal"
+        android:src="@drawable/union_bank_of_india"
         />
+    </LinearLayout>
 
-    <Button
-        fontPath="fonts/gothambold.otf"
-
-        android:layout_width="150dp"
-        android:layout_height="60dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="30dp"
-        android:onClick="upload"
-        android:paddingStart="10dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="4dp"
-
-        android:text="Upload"
-        android:textColor="@color/white" />
-
-
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

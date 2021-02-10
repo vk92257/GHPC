@@ -110,7 +110,7 @@ public class OCR extends BaseActivity {
         captureImageBtn = findViewById(R.id.capture_image);
         detectTextBtn = findViewById(R.id.detect_text_image);
         mTextView = findViewById(R.id.text_view);
-        mCameraView = findViewById(R.id.surfaceView);
+//        mCameraView = findViewById(R.id.surfaceView);
         clickListener();
     }
 

@@ -12,4 +12,10 @@
     <color name="secondry">#87C443</color>
     <color name="accent">#000000</color>
     <color name="darkGray">#50585858</color>
+
+    <!--App New Theme colors-->
+    <color name="primary_new">#87C443</color>
+    <color name="secondary_new">#87C443</color>
+    <color name="light_black">#424C58</color>
+
 </resources>
