@@ -1,9 +1,5 @@
 package com.lynhill.ghpc.activities;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +10,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.lynhill.ghpc.R;
@@ -52,6 +52,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_employee);
         findViews();
+        project = roofing.getText().toString();
     }
 
     private void findViews() {
@@ -206,6 +207,9 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
             if (!TextUtils.isEmpty(email.getEditText().getText().toString())) {
                 if (isEmailValid(email.getEditText().getText().toString())) {
                     stringEmail = email.getEditText().getText().toString();
+                    emailArrayList.add(email.getEditText().getText().toString());
+                    email.getEditText().setText("");
+                    emailAdapter.notifyDataSetChanged();
                     email.setErrorEnabled(false);
                     storageManager.setUserEmail(stringEmail);
                 } else {
@@ -230,6 +234,9 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
                     stringPhoneNumber = phoneNumber.getEditText().getText().toString();
                     phoneNumber.setErrorEnabled(false);
                     storageManager.setUserPhoneNumber(stringPhoneNumber);
+                    phoneArrayList.add(phoneNumber.getEditText().getText().toString());
+                    phoneNumber.getEditText().setText("");
+                    phoneAdapter.notifyDataSetChanged();
                 }
             } else {
 

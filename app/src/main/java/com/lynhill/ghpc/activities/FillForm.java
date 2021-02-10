@@ -59,10 +59,10 @@ public class FillForm extends AppCompatActivity {
     AddMoreAdapter phoneAdapter;
     AddMoreAdapter emailAdapter;
     private RecyclerView emailList, phoneList;
-
     private String TAG = FillForm.class.getSimpleName();
     private int requestPermissionID = 769;
     private Uri uri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +85,10 @@ public class FillForm extends AppCompatActivity {
         phoneList = findViewById(R.id.phone_list);
         clickListenre();
         autoFillform();
-        if (phoneArrayList.isEmpty()) {
-        }
-        if (emailArrayList.isEmpty()) {
-        }
+//        if (phoneArrayList.isEmpty()) {
+//        }
+//        if (emailArrayList.isEmpty()) {
+//        }
         //        showDialog();
     }
 
@@ -178,7 +178,7 @@ public class FillForm extends AppCompatActivity {
         String imageFileName;
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File filename;
-        imageFileName = "."+StorageManager.getInstance(this).getUserName()+ timeStamp + "_";
+        imageFileName = "." + StorageManager.getInstance(this).getUserName() + timeStamp + "_";
         filename = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -279,6 +279,9 @@ public class FillForm extends AppCompatActivity {
             if (!TextUtils.isEmpty(email.getEditText().getText().toString())) {
                 if (isEmailValid(email.getEditText().getText().toString())) {
                     stringEmail = email.getEditText().getText().toString();
+                    emailArrayList.add(email.getEditText().getText().toString());
+                    email.getEditText().setText("");
+                    emailAdapter.notifyDataSetChanged();
                     email.setErrorEnabled(false);
                     storageManager.setUserEmail(stringEmail);
                 } else {
@@ -303,6 +306,9 @@ public class FillForm extends AppCompatActivity {
                     stringPhoneNumber = phoneNumber.getEditText().getText().toString();
                     phoneNumber.setErrorEnabled(false);
                     storageManager.setUserPhoneNumber(stringPhoneNumber);
+                    phoneArrayList.add(phoneNumber.getEditText().getText().toString());
+                    phoneNumber.getEditText().setText("");
+                    phoneAdapter.notifyDataSetChanged();
                 }
             } else {
 

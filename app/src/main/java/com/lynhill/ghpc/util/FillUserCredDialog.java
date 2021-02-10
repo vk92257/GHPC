@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.lynhill.ghpc.R;
 
@@ -19,6 +18,7 @@ import java.util.Objects;
 public class FillUserCredDialog extends BottomSheetDialogFragment implements View.OnClickListener {
     private static final String TAG = "logout is click";
     public LinearLayout linearLayout;
+
     public FillUserCredDialog() {
     }
 
@@ -36,21 +36,21 @@ public class FillUserCredDialog extends BottomSheetDialogFragment implements Vie
         initvalue(view);
     }
 
-    public void initvalue(View view){
+    public void initvalue(View view) {
 
     }
 
     @Override
     public void onClick(View view) {
-            switch (view.getId()){
+        switch (view.getId()) {
 
 
-            }
+        }
     }
 
-    private void logoutallsession(){
+    private void logoutallsession() {
 
-        Log.e(TAG, "logoutallsession: logout........" );
+        Log.e(TAG, "logoutallsession: logout........");
 
 
         Objects.requireNonNull(getActivity()).finish();
