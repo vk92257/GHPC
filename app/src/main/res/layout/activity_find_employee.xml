@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -24,7 +23,6 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -33,7 +31,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
                 android:onClick="backpress"/>
-
 
             <TextView
                 fontPath="fonts/gothambold.otf"
@@ -47,7 +44,6 @@
                 android:textStyle="bold" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
 
     <ScrollView
         android:layout_width="0dp"
@@ -89,11 +85,9 @@
 
                 <ImageView
                     android:id="@+id/scan_code"
-
                     android:layout_width="100dp"
                     android:layout_height="45dp"
                     android:layout_alignParentTop="true"
-
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:background="@color/light_black"
@@ -122,7 +116,6 @@
                         android:id="@+id/username_tiet"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:background="@color/white"
                         android:hint="@string/username"
                         android:inputType="textPersonName"
@@ -136,13 +129,12 @@
                         />
 
 
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
                     android:id="@+id/fill_user_name"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center|right"
                     android:layout_marginEnd="10sp"
                     android:padding="9.5dp"
@@ -173,7 +165,6 @@
                         android:background="@color/white"
                         android:hint="@string/enter_address"
                         android:inputType="textPersonName"
-
                         android:textColor="@color/light_black"
                         android:textColorHint="@color/light_black"
                         android:paddingEnd="45dp"
@@ -181,13 +172,12 @@
                         android:layout_marginLeft="4dp"
                         android:layout_marginBottom="2dp"
                         android:layout_marginTop="2dp"/>
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
                     android:id="@+id/fill_user_address"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center|right"
                     android:layout_marginEnd="10sp"
                     android:padding="9.5dp"
@@ -218,7 +208,6 @@
                         android:background="@color/white"
                         android:hint="Enter date of birth"
                         android:inputType="textPersonName"
-
                         android:textColor="@color/light_black"
                         android:textColorHint="@color/light_black"
                         android:paddingEnd="45dp"
@@ -227,13 +216,12 @@
                         android:layout_marginBottom="2dp"
                         android:layout_marginTop="2dp"
                         />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
                     android:id="@+id/fill_user_dob"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center|right"
                     android:layout_marginEnd="10sp"
                     android:padding="9.5dp"
@@ -242,27 +230,23 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <FrameLayout
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/email_til"
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:layout_marginBottom="7dp"
                     android:background="@drawable/round_corner_btn"
                     android:textColorHint="@color/light_black">
 
-                    android:layout_height="wrap_content">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/email_til"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/email_tiet"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:background="@color/white"
                         android:hint="@string/email"
                         android:inputType="textEmailAddress"
@@ -277,22 +261,18 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </FrameLayout>
 
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/user_phone_number_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="7dp"
                 android:background="@drawable/round_corner_btn"
                 android:layout_marginBottom="7dp"
                 android:textColorHint="@color/light_black">
 
-                android:orientation="vertical">
-
-
-                <FrameLayout
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/user_phone_number"
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content"
 
                     android:hint="Enter phone Number"
@@ -306,7 +286,6 @@
                     android:layout_marginBottom="2dp"
                     android:layout_marginTop="2dp"/>
             </com.google.android.material.textfield.TextInputLayout>
-
             <!--        <com.google.android.material.textfield.TextInputLayout-->
             <!--            android:visibility="gone"-->
             <!--            android:id="@+id/pwd_til"-->
@@ -403,8 +382,7 @@
 
             <Button
                 fontPath="fonts/gothambold.otf"
-
-               android:layout_width="match_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="50dp"

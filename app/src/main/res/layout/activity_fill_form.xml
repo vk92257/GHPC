@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
-
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,7 +12,6 @@
         android:id="@+id/toolbarsales"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-
         android:elevation="3dp"
         app:cardBackgroundColor="@color/white"
         app:cardElevation="3dp"
@@ -263,26 +259,23 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <FrameLayout
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/email_til"
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:layout_marginBottom="7dp"
                     android:background="@drawable/round_corner_btn"
                     android:textColorHint="@color/light_black">
 
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/email_til"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/email_tiet"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:background="@color/white"
                         android:hint="@string/email"
                         android:inputType="textEmailAddress"
@@ -296,22 +289,18 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </FrameLayout>
 
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/user_phone_number_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="7dp"
                 android:background="@drawable/round_corner_btn"
                 android:textColorHint="@color/light_black">
 
-                android:orientation="vertical">
-
-
-                <FrameLayout
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/user_phone_number"
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:hint="Enter phone Number"
@@ -343,46 +332,6 @@
             <!--                android:textColorHint="@color/white" />-->
             <!--        </com.google.android.material.textfield.TextInputLayout>-->
 
-                    android:layout_height="wrap_content">
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/user_phone_number_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="7dp"
-                        android:layout_marginBottom="7dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/user_phone_number"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/round_corner_btn"
-                            android:hint="Enter phone Number"
-                            android:inputType="number"
-                            android:maxLength="10"
-                            android:textColorHint="@color/white" />
-
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <ImageView
-                        android:id="@+id/add_phone"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center|right"
-                        android:layout_marginEnd="10sp"
-                        android:padding="9.5dp"
-                        android:src="@drawable/ic_baseline_add_24"
-                        android:tint="@color/primary"
-                        android:visibility="visible" />
-                </FrameLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/phone_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -400,6 +349,7 @@
                     android:layout_weight="1"
                     android:background="@color/primary"
                     android:gravity="center"
+                    android:onClick="male"
                     android:padding="10dp"
                     android:text="Roofing"
                     android:textColor="@android:color/white"
@@ -412,6 +362,7 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:onClick="male"
                     android:padding="10dp"
                     android:text="Solar"
                     android:textColor="@android:color/white"
@@ -424,8 +375,9 @@
                     android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:onClick="female"
                     android:padding="10dp"
-                    android:text="Hvac"
+                    android:text=" Hvac"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
             </LinearLayout>
