@@ -11,7 +11,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@mipmap/ic_launcher_main"
+        android:src="@mipmap/ic_launcher"
         android:text="@string/signup"
         android:textColor="@color/primary"
         android:textSize="30sp"
