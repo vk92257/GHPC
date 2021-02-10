@@ -10,9 +10,11 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:paddingTop="15dp"
         android:layout_gravity="center_horizontal"
+
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@mipmap/ic_launcher_main"
+
         android:text="@string/signup"
         android:textColor="@color/primary"
         android:textSize="30sp"

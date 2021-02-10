@@ -32,18 +32,22 @@
        android:layout_marginTop="10dp"
         android:layout_gravity="center"
         android:id="@+id/capture_image"
+
         android:text="capture image"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:textColor="@color/white"/>
+
     <Button
        android:visibility="visible"
         android:layout_gravity="center"
-        android:text="Detect Text"
+        android:text="Scan out Texts"
         android:elevation="3dp"
         android:id="@+id/detect_text_image"
+
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:textColor="@color/white"/>
+
 
 </LinearLayout>

@@ -10,7 +10,7 @@
     <!--  App Theme colors  -->
     <color name="primary">#87C443</color>
     <color name="secondry">#87C443</color>
-    <color name="accent"> #121212</color>
+    <color name="accent">#000000</color>
     <color name="darkGray">#50585858</color>
 
     <!--App New Theme colors-->

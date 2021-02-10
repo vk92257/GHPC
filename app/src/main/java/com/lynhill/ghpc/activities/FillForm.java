@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Intent;
@@ -18,16 +20,23 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.BaseAdapter;
+
+
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.text.Line;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lynhill.ghpc.BuildConfig;
 import com.lynhill.ghpc.R;
+import com.lynhill.ghpc.adapter.AddMoreAdapter;
 import com.lynhill.ghpc.adapter.SampleImageAdapter;
 import com.lynhill.ghpc.pojo.Representatives;
+import com.lynhill.ghpc.util.Constants;
 import com.lynhill.ghpc.util.StorageManager;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,11 +53,18 @@ public class FillForm extends BaseActivity {
     private static final int REQUEST_CAMERA_CODE = 214;
     private TextInputLayout userName, address, dob, email, phoneNumber;
     String stringName, stringAddress, stringDob, stringEmail, stringPhoneNumber;
-    ImageView signature, signatureClikc;
+    ImageView signature, signatureClikc, addPhoneNumber, addEmail;
     private String currentPhotoPath;
     private boolean haveSignature = false;
+    ArrayList<String> phoneArrayList = new ArrayList<>();
+    ArrayList<String> emailArrayList = new ArrayList<>();
+    AddMoreAdapter phoneAdapter;
+    AddMoreAdapter emailAdapter;
+    private RecyclerView emailList, phoneList;
     private String TAG = FillForm.class.getSimpleName();
-    private int requestPermissionID=769;
+    private int requestPermissionID = 769;
+    private Uri uri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +74,8 @@ public class FillForm extends BaseActivity {
     }
 
     private void findViews() {
+        addPhoneNumber = findViewById(R.id.add_phone);
+        addEmail = findViewById(R.id.add_email);
         signature = findViewById(R.id.signature);
         signatureClikc = findViewById(R.id.signature_click);
         userName = findViewById(R.id.username_til);
@@ -65,10 +83,17 @@ public class FillForm extends BaseActivity {
         dob = findViewById(R.id.user_dob_layout);
         email = findViewById(R.id.email_til);
         phoneNumber = findViewById(R.id.user_phone_number_layout);
+        emailList = findViewById(R.id.email_list);
+        phoneList = findViewById(R.id.phone_list);
         clickListenre();
         autoFillform();
+//        if (phoneArrayList.isEmpty()) {
+//        }
+//        if (emailArrayList.isEmpty()) {
+//        }
         //        showDialog();
     }
+
 
 
 //    onclick's
@@ -77,11 +102,43 @@ public class FillForm extends BaseActivity {
     }
 
 
+
+    private void addingListView() {
+        phoneList.setLayoutManager(new LinearLayoutManager(this));
+        emailList.setLayoutManager(new LinearLayoutManager(this));
+//    phoneAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, phoneArrayList);
+        phoneAdapter = new AddMoreAdapter(phoneArrayList, this);
+//    emailAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, emailArrayList);
+        emailAdapter = new AddMoreAdapter(emailArrayList, this);
+        phoneList.setAdapter(phoneAdapter);
+        emailList.setAdapter(emailAdapter);
+    }
+
     private void clickListenre() {
+        addPhoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                phoneArrayList.add(phoneNumber.getEditText().getText().toString());
+                phoneNumber.getEditText().setText("");
+                phoneAdapter.notifyDataSetChanged();
+            }
+        });
+        addEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isEmailValid(email.getEditText().getText().toString())) {
+                    emailArrayList.add(email.getEditText().getText().toString());
+                    email.getEditText().setText("");
+                    emailAdapter.notifyDataSetChanged();
+                } else {
+                    email.setError("Email is invalid");
+                }
+            }
+        });
         signatureClikc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               checkPermissions();
+                checkPermissions();
             }
         });
     }
@@ -132,7 +189,7 @@ public class FillForm extends BaseActivity {
         String imageFileName;
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File filename;
-        imageFileName = "JPEG_" + timeStamp + "_";
+        imageFileName = "." + StorageManager.getInstance(this).getUserName() + timeStamp + "_";
         filename = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -140,6 +197,8 @@ public class FillForm extends BaseActivity {
         );
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = filename.getAbsolutePath();
+        uri = Uri.fromFile(filename);
+
 //        } else {
 //            imageFileName = "VID_" + timeStamp + "_";
 //            filename = File.createTempFile(
@@ -156,9 +215,23 @@ public class FillForm extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CAMERA_CODE) {
-            signature.setImageURI(Uri.parse(currentPhotoPath));
-            haveSignature = true;
+//            signature.setImageURI(Uri.parse(currentPhotoPath));
+            Log.e(TAG, "onActivityResult: uri " + uri + " \n path" + currentPhotoPath);
+
+            CropImage.activity(uri)
+                    .start(this);
         }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                signature.setImageURI(resultUri);
+                haveSignature = true;
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+
     }
 
     private void autoFillform() {
@@ -170,23 +243,29 @@ public class FillForm extends BaseActivity {
                 address.getEditText().setText(storageManager.getUserAddress());
             if (!TextUtils.isEmpty(storageManager.getUserDOB()))
                 dob.getEditText().setText(storageManager.getUserDOB());
-            if (!TextUtils.isEmpty(storageManager.getUserEmail()))
-                email.getEditText().setText(storageManager.getUserEmail());
-            if (!TextUtils.isEmpty(storageManager.getUserPhoneNumber()))
-                phoneNumber.getEditText().setText(storageManager.getUserPhoneNumber());
-
+//            if (!TextUtils.isEmpty(storageManager.getUserEmail()))
+//                email.getEditText().setText(storageManager.getUserEmail());
+//            if (!TextUtils.isEmpty(storageManager.getUserPhoneNumber()))
+//                phoneNumber.getEditText().setText(storageManager.getUserPhoneNumber());
+            emailArrayList = Paper.book().read(Constants.PAPER_EMAIL);
+            phoneArrayList = Paper.book().read(Constants.PAPER_CONTACT);
+            if (!emailArrayList.isEmpty() && !phoneArrayList.isEmpty()) {
+                Log.e(TAG, "autoFillform: " + emailArrayList.size());
+                Log.e(TAG, "autoFillform: " + phoneArrayList.size());
+                addingListView();
+            }
         }
     }
 
 
     public void Signup_click(View view) {
-        ArrayList<Representatives>representatives= new ArrayList<>();
+        ArrayList<Representatives> representatives = new ArrayList<>();
         Representatives representatives1 = new Representatives();
         StorageManager storageManager = StorageManager.getInstance(this);
         if (!TextUtils.isEmpty(userName.getEditText().getText().toString())) {
             stringName = userName.getEditText().getText().toString();
             userName.setErrorEnabled(false);
-              representatives1.setName(stringName);
+            representatives1.setName(stringName);
         } else {
             userName.setError("Enter your user name.");
             return;
@@ -207,29 +286,43 @@ public class FillForm extends BaseActivity {
             dob.setError("Enter your date of birth.");
             return;
         }
-
-        if (!TextUtils.isEmpty(email.getEditText().getText().toString())) {
-            if (isEmailValid(email.getEditText().getText().toString())) {
-                stringEmail = email.getEditText().getText().toString();
-                email.setErrorEnabled(false);
-                representatives1.setEmali(stringEmail);
+        if (!TextUtils.isEmpty(email.getEditText().getText().toString()) || !emailArrayList.isEmpty()) {
+            if (!TextUtils.isEmpty(email.getEditText().getText().toString())) {
+                if (isEmailValid(email.getEditText().getText().toString())) {
+                    stringEmail = email.getEditText().getText().toString();
+                    emailArrayList.add(email.getEditText().getText().toString());
+                    email.getEditText().setText("");
+                    emailAdapter.notifyDataSetChanged();
+                    email.setErrorEnabled(false);
+                    storageManager.setUserEmail(stringEmail);
+                } else {
+                    email.setError("Enter your valid e-mail.");
+                    return;
+                }
             } else {
-                email.setError("Enter your valid e-mail.");
-                return;
+                email.setErrorEnabled(false);
             }
+
 
         } else {
             email.setError("Enter your e-mail.");
             return;
         }
 
-        if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString())) {
-            if (phoneNumber.getEditText().getText().length() < 10) {
-                phoneNumber.setError("enter a valid phone number");
+        if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString()) || !phoneArrayList.isEmpty()) {
+            if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString())) {
+                if (phoneNumber.getEditText().getText().length() < 10) {
+                    phoneNumber.setError("enter a valid phone number");
+                } else {
+                    stringPhoneNumber = phoneNumber.getEditText().getText().toString();
+                    phoneNumber.setErrorEnabled(false);
+                    storageManager.setUserPhoneNumber(stringPhoneNumber);
+                    phoneArrayList.add(phoneNumber.getEditText().getText().toString());
+                    phoneNumber.getEditText().setText("");
+                    phoneAdapter.notifyDataSetChanged();
+                }
             } else {
-                stringPhoneNumber = phoneNumber.getEditText().getText().toString();
-                phoneNumber.setErrorEnabled(false);
-                representatives1.setPhoneNumber(stringPhoneNumber);
+
             }
         } else {
             phoneNumber.setError("Enter your phone number.");
@@ -238,11 +331,15 @@ public class FillForm extends BaseActivity {
         if (!haveSignature) {
             Toast.makeText(this, "Please upload your signature.", Toast.LENGTH_SHORT).show();
             return;
-        }else{
+        } else {
             storageManager.setUserSignature(currentPhotoPath);
             representatives1.setSignature(currentPhotoPath);
         }
 
+        if (!emailArrayList.isEmpty() && !phoneArrayList.isEmpty()) {
+            Paper.book().write(Constants.PAPER_EMAIL, emailArrayList);
+            Paper.book().write(Constants.PAPER_CONTACT, phoneArrayList);
+        }
         uploadProcess();
     }
 
@@ -250,7 +347,7 @@ public class FillForm extends BaseActivity {
 //        Toast.makeText(this, "toast", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, SampleImagesActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.fadein,R.anim.fadeout);
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     private boolean isEmailValid(String email) {
@@ -261,6 +358,7 @@ public class FillForm extends BaseActivity {
         matcher = pattern.matcher(email);
         return matcher.matches();
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

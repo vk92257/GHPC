@@ -50,8 +50,9 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Representatives rep = data.get(position);
         holder.username.setText(rep.getName());
-        holder.email.setText(rep.getEmali());
+        holder.email.setText(rep.getEmali().get(0));
         holder.address.setText(rep.getAddress());
+
         holder.phone.setText(" "+rep.getPhoneNumber());
 
 
@@ -62,6 +63,7 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.MyViewHolder> {
                 context.startActivity(intent);
             }
         });
+
     }
 
     @Override
