@@ -95,12 +95,10 @@ public class FillForm extends BaseActivity {
     }
 
 
-
-//    onclick's
-    public void backpress(View view){
+    //    onclick's
+    public void backpress(View view) {
         finish();
     }
-
 
 
     private void addingListView() {
@@ -132,6 +130,7 @@ public class FillForm extends BaseActivity {
                     emailAdapter.notifyDataSetChanged();
                 } else {
                     email.setError("Email is invalid");
+                    email.setErrorIconDrawable(null);
                 }
             }
         });
@@ -231,7 +230,6 @@ public class FillForm extends BaseActivity {
                 Exception error = result.getError();
             }
         }
-
     }
 
     private void autoFillform() {
@@ -268,6 +266,7 @@ public class FillForm extends BaseActivity {
             representatives1.setName(stringName);
         } else {
             userName.setError("Enter your user name.");
+           userName.setErrorIconDrawable(null);
             return;
         }
         if (!TextUtils.isEmpty(address.getEditText().getText().toString())) {
@@ -276,6 +275,7 @@ public class FillForm extends BaseActivity {
             representatives1.setAddress(stringAddress);
         } else {
             address.setError("Enter your address.");
+            address.setErrorIconDrawable(null);
             return;
         }
         if (!TextUtils.isEmpty(dob.getEditText().getText().toString())) {
@@ -284,6 +284,7 @@ public class FillForm extends BaseActivity {
             representatives1.setDob(stringDob);
         } else {
             dob.setError("Enter your date of birth.");
+            dob.setErrorIconDrawable(null);
             return;
         }
         if (!TextUtils.isEmpty(email.getEditText().getText().toString()) || !emailArrayList.isEmpty()) {
@@ -297,6 +298,7 @@ public class FillForm extends BaseActivity {
                     storageManager.setUserEmail(stringEmail);
                 } else {
                     email.setError("Enter your valid e-mail.");
+                    email.setErrorIconDrawable(null);
                     return;
                 }
             } else {
@@ -306,6 +308,7 @@ public class FillForm extends BaseActivity {
 
         } else {
             email.setError("Enter your e-mail.");
+            email.setErrorIconDrawable(null);
             return;
         }
 
@@ -326,6 +329,7 @@ public class FillForm extends BaseActivity {
             }
         } else {
             phoneNumber.setError("Enter your phone number.");
+            phoneNumber.setErrorIconDrawable(null);
             return;
         }
         if (!haveSignature) {

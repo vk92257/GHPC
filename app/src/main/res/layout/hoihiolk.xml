@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.FillForm">
+
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_marginStart="3dp"-->
+<!--        android:layout_marginEnd="3dp"-->
+<!--        android:background="#50585858"-->
+<!--        android:elevation="10dp"-->
+<!--        android:orientation="horizontal">-->
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/not_signin"-->
+<!--            fontPath="fonts/gothambold.otf"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:fontFamily="@font/roboto_mono"-->
+<!--            android:text="Sales Form "-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="17sp"-->
+<!--            android:visibility="visible" />-->
+
+
+<!--        <ImageView-->
+<!--            android:id="@+id/add_employee"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:onClick="addEmployee"-->
+<!--            android:src="@drawable/ic_baseline_add_24"-->
+<!--            android:tint="@color/primary"-->
+<!--            android:visibility="gone" />-->
+
+<!--    </RelativeLayout>-->
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="20dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:paddingStart="10dp"-->
+<!--        android:paddingTop="6dp"-->
+<!--        android:paddingEnd="10dp"-->
+<!--        android:paddingBottom="6dp"-->
+<!--        android:text="Enter your information"-->
+<!--        android:textColor="@color/primary"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textStyle="bold" />-->
+
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:scrollbars="none">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="vertical"-->
+<!--            android:padding="20dp">-->
+<!--            &lt;!&ndash;        fontPath="fonts/Nunito-Bold.ttf"&ndash;&gt;-->
+
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:layout_marginEnd="3dp"-->
+<!--                android:layout_marginBottom="10dp"-->
+<!--                android:background="@color/darkGray"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:paddingStart="10dp"-->
+<!--                android:paddingTop="4dp"-->
+<!--                android:paddingBottom="4dp"-->
+<!--                android:visibility="gone">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/scan"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentStart="true"-->
+<!--                    android:paddingTop="10sp"-->
+<!--                    android:paddingBottom="10sp"-->
+<!--                    android:text="@string/scan"-->
+<!--                    android:textSize="17sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:visibility="visible" />-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/scan_code"-->
+<!--                    android:layout_width="40dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:layout_marginEnd="10sp"-->
+<!--                    android:padding="9.5dp"-->
+<!--                    android:src="@drawable/ic_scanning"-->
+<!--                    android:tint="@color/primary" />-->
+
+<!--            </RelativeLayout>-->
+
+<!--            <FrameLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:id="@+id/username_til"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="7dp"-->
+<!--                    android:layout_marginBottom="7dp">-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/username_tiet"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:background="@drawable/round_corner_btn"-->
+<!--                        android:hint="@string/username"-->
+<!--                        android:inputType="textPersonName"-->
+<!--                        android:textColorHint="@color/white" />-->
+
+
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/fill_user_name"-->
+<!--                    android:layout_width="40dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_gravity="center|right"-->
+<!--                    android:layout_marginEnd="10sp"-->
+<!--                    android:padding="9.5dp"-->
+<!--                    android:src="@drawable/ic_contact_form"-->
+<!--                    android:tint="@color/primary"-->
+<!--                    android:visibility="gone" />-->
+
+<!--            </FrameLayout>-->
+
+
+<!--            <FrameLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:id="@+id/user_address_layout"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="7dp"-->
+<!--                    android:layout_marginBottom="7dp">-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/user_address"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:background="@drawable/round_corner_btn"-->
+<!--                        android:hint="@string/enter_address"-->
+<!--                        android:inputType="textPersonName"-->
+<!--                        android:textColorHint="@color/white" />-->
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/fill_user_address"-->
+<!--                    android:layout_width="40dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_gravity="center|right"-->
+<!--                    android:layout_marginEnd="10sp"-->
+<!--                    android:padding="9.5dp"-->
+<!--                    android:src="@drawable/ic_contact_form"-->
+<!--                    android:tint="@color/primary"-->
+<!--                    android:visibility="gone" />-->
+
+<!--            </FrameLayout>-->
+
+
+<!--            <FrameLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:id="@+id/user_dob_layout"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="7dp"-->
+<!--                    android:layout_marginBottom="7dp">-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/user_dob"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:background="@drawable/round_corner_btn"-->
+<!--                        android:hint="Enter date of birth"-->
+<!--                        android:inputType="textPersonName"-->
+<!--                        android:textColorHint="@color/white" />-->
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/fill_user_dob"-->
+<!--                    android:layout_width="40dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_gravity="center|right"-->
+<!--                    android:layout_marginEnd="10sp"-->
+<!--                    android:padding="9.5dp"-->
+<!--                    android:src="@drawable/ic_contact_form"-->
+<!--                    android:tint="@color/primary"-->
+<!--                    android:visibility="gone" />-->
+<!--            </FrameLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <FrameLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content">-->
+
+<!--                    <com.google.android.material.textfield.TextInputLayout-->
+<!--                        android:id="@+id/email_til"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="7dp"-->
+<!--                        android:layout_marginBottom="7dp">-->
+
+<!--                        <com.google.android.material.textfield.TextInputEditText-->
+<!--                            android:id="@+id/email_tiet"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@drawable/round_corner_btn"-->
+<!--                            android:hint="@string/email"-->
+<!--                            android:inputType="textEmailAddress"-->
+<!--                            android:paddingStart="10dp"-->
+<!--                            android:textColorHint="@color/white" />-->
+<!--                    </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/add_email"-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_gravity="center|right"-->
+<!--                        android:layout_marginEnd="10sp"-->
+<!--                        android:padding="9.5dp"-->
+<!--                        android:src="@drawable/ic_baseline_add_24"-->
+<!--                        android:tint="@color/primary"-->
+<!--                        android:visibility="visible" />-->
+
+<!--                </FrameLayout>-->
+
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/email_list"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content" />-->
+<!--            </LinearLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <FrameLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content">-->
+
+<!--                    <com.google.android.material.textfield.TextInputLayout-->
+<!--                        android:id="@+id/user_phone_number_layout"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="7dp"-->
+<!--                        android:layout_marginBottom="7dp">-->
+
+<!--                        <com.google.android.material.textfield.TextInputEditText-->
+<!--                            android:id="@+id/user_phone_number"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@drawable/round_corner_btn"-->
+<!--                            android:hint="Enter phone Number"-->
+<!--                            android:inputType="number"-->
+<!--                            android:maxLength="10"-->
+<!--                            android:textColorHint="@color/white" />-->
+
+
+<!--                    </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/add_phone"-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_gravity="center|right"-->
+<!--                        android:layout_marginEnd="10sp"-->
+<!--                        android:padding="9.5dp"-->
+<!--                        android:src="@drawable/ic_baseline_add_24"-->
+<!--                        android:tint="@color/primary"-->
+<!--                        android:visibility="visible" />-->
+<!--                </FrameLayout>-->
+
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/phone_list"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content" />-->
+<!--            </LinearLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:visibility="gone"-->
+<!--                android:weightSum="3">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/roofing"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="2dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:background="@color/primary"-->
+<!--                    android:gravity="center"-->
+<!--                    android:padding="10dp"-->
+<!--                    android:text="Roofing"-->
+<!--                    android:textColor="@android:color/white"-->
+<!--                    android:textSize="16sp" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/solar"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="2dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:gravity="center"-->
+<!--                    android:padding="10dp"-->
+<!--                    android:text="Solar"-->
+<!--                    android:textColor="@android:color/white"-->
+<!--                    android:textSize="16sp" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/hvac"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="2dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:gravity="center"-->
+<!--                    android:padding="10dp"-->
+<!--                    android:text="Hvac"-->
+<!--                    android:textColor="@android:color/white"-->
+<!--                    android:textSize="16sp" />-->
+<!--            </LinearLayout>-->
+
+<!--            <TextView-->
+
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:paddingStart="10dp"-->
+<!--                android:paddingTop="6dp"-->
+<!--                android:paddingEnd="10dp"-->
+<!--                android:paddingBottom="6dp"-->
+<!--                android:text="Upload your signature"-->
+<!--                android:textColor="@color/primary"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textStyle="bold" />-->
+
+
+<!--            <FrameLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="200dp"-->
+<!--                android:layout_marginTop="10dp">-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/signature"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:scaleType="centerCrop" />-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/signature_click"-->
+<!--                    android:layout_width="100dp"-->
+<!--                    android:layout_height="100dp"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:alpha="0.3"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/ic_signature_24"-->
+<!--                    android:tint="@color/white" />-->
+<!--            </FrameLayout>-->
+
+<!--            <Button-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="40dp"-->
+<!--                android:layout_marginBottom="50dp"-->
+<!--                android:background="@drawable/round_edge_btn"-->
+<!--                android:onClick="Signup_click"-->
+<!--                android:text="@string/signupbtn"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/not_signin"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginBottom="30dp"-->
+<!--                android:text="@string/nothaveaccount"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:visibility="gone" />-->
+<!--        </LinearLayout>-->
+
+<!--    </ScrollView>-->
+
+
+</LinearLayout>
