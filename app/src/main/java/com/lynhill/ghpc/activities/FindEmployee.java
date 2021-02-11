@@ -1,6 +1,7 @@
 package com.lynhill.ghpc.activities;
 
 import android.app.Dialog;
+import android.app.MediaRouteButton;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
     AddMoreAdapter emailAdapter;
     private RecyclerView emailList, phoneList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
     }
 
     private void findViews() {
+
         addPhoneNumber = findViewById(R.id.add_phone);
         addEmail = findViewById(R.id.add_email);
         scanCode = findViewById(R.id.scan_code);
@@ -75,12 +78,13 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         phoneList = findViewById(R.id.phone_list);
         clickListener();
         addingListView();
+
 //        showDialog();
     }
 
 
     //    onclick's
-    public void backpress(View view){
+    public void backpress(View view) {
         finish();
     }
 
@@ -102,22 +106,33 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
         addPhoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                phoneArrayList.add(phoneNumber.getEditText().getText().toString());
-                phoneNumber.getEditText().setText("");
-                phoneAdapter.notifyDataSetChanged();
+                if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString())) {
+                    phoneArrayList.add(phoneNumber.getEditText().getText().toString());
+                    phoneNumber.getEditText().setText("");
+                    phoneAdapter.notifyDataSetChanged();
+                }else{
+                    phoneNumber.setErrorIconDrawable(null);
+                    phoneNumber.setError("Enter you phone number.");
+                }
             }
         });
         addEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isEmailValid(email.getEditText().getText().toString())) {
+              if(!TextUtils.isEmpty(email.getEditText().getText().toString())){
+                    if (isEmailValid(email.getEditText().getText().toString())) {
                     emailArrayList.add(email.getEditText().getText().toString());
                     email.getEditText().setText("");
                     emailAdapter.notifyDataSetChanged();
                     email.setErrorEnabled(false);
                 } else {
                     email.setError("Email is invalid");
+                    email.setErrorIconDrawable(null);
                 }
+              }else{
+               email.setError("Enter email");
+               email.setErrorIconDrawable(null);
+              }
             }
         });
 
@@ -190,9 +205,12 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
 //                roofing.setBackgroundColor(getResources().getColor(R.color.primary));
 //                hvac.setBackgroundColor(getResources().getColor(R.color.light_black));
 
-                solor.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));;
-                roofing.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.primary)));;
-                hvac.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));;
+                solor.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
+                ;
+                roofing.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.primary)));
+                ;
+                hvac.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
+                ;
 
                 project = roofing.getText().toString();
 //                solor.setBackgroundColor(getResources().getColor(R.color.darkGray));
@@ -209,6 +227,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
             storageManager.setUserName(stringName);
         } else {
             userName.setError("Enter your user name.");
+            userName.setErrorIconDrawable(null);
             return;
         }
         if (!TextUtils.isEmpty(address.getEditText().getText().toString())) {
@@ -217,6 +236,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
             storageManager.setUserAddress(stringAddress);
         } else {
             address.setError("Enter your address.");
+            address.setErrorIconDrawable(null);
             return;
         }
         if (!TextUtils.isEmpty(dob.getEditText().getText().toString())) {
@@ -225,6 +245,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
             storageManager.setUserPhoneDOB(stringDob);
         } else {
             dob.setError("Enter your date of birth.");
+            dob.setErrorIconDrawable(null);
             return;
         }
 
@@ -239,6 +260,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
                     storageManager.setUserEmail(stringEmail);
                 } else {
                     email.setError("Enter your valid e-mail.");
+                    email.setErrorIconDrawable(null);
                     return;
                 }
             } else {
@@ -248,6 +270,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
 
         } else {
             email.setError("Enter your e-mail.");
+            email.setErrorIconDrawable(null);
             return;
         }
 
@@ -268,6 +291,7 @@ public class FindEmployee extends BaseActivity implements UserInfoListener {
             }
         } else {
             phoneNumber.setError("Enter your phone number.");
+            phoneNumber.setErrorIconDrawable(null);
             return;
         }
         if (TextUtils.isEmpty(project.trim())) {

@@ -43,6 +43,7 @@ public class AddMoreAdapter extends RecyclerView.Adapter<AddMoreAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         String s = data.get(position);
+        holder.textView.setTextColor(context.getResources().getColor(R.color.black));
        holder.textView.setText(s);
     }
 
