@@ -15,7 +15,6 @@ import com.lynhill.ghpc.R;
 import com.lynhill.ghpc.adapter.BanksListAdapter;
 import com.lynhill.ghpc.listener.BankClickListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,7 +135,7 @@ public class BankActivity extends AppCompatActivity implements BankClickListener
 
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == BANK_CODE) {
-            Intent intent = new Intent(this, FillForm.class);
+            Intent intent = new Intent(this, UploadSignature.class);
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             startActivity(intent);
         }

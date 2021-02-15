@@ -15,6 +15,7 @@ public class Representatives implements Parcelable {
         name = in.readString();
         address = in.readString();
         dob = in.readString();
+        project = in.readString();
         emali = in.createStringArrayList();
         phoneNumber = in.createStringArrayList();
         signature = in.readString();
@@ -26,6 +27,7 @@ public class Representatives implements Parcelable {
         dest.writeString(name);
         dest.writeString(address);
         dest.writeString(dob);
+        dest.writeString(project);
         dest.writeStringList(emali);
         dest.writeStringList(phoneNumber);
         dest.writeString(signature);
@@ -107,6 +109,16 @@ public class Representatives implements Parcelable {
     String name;
     String address;
     String dob;
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    String project;
     ArrayList<String> emali;
     ArrayList<String> phoneNumber;
     String signature;
