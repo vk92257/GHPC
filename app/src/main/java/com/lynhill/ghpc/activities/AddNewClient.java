@@ -162,8 +162,9 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
             if (!TextUtils.isEmpty(representatives1.getDob()))
                 dob.getEditText().setText(representatives1.getDob());
 
-
+        if (representatives1.getEmali()!=null)
             emailArrayList.addAll(representatives1.getEmali());
+            if (representatives1.getPhoneNumber()!=null)
             phoneArrayList.addAll(representatives1.getPhoneNumber());
 //            emailArrayList = Utils.getStringArrayList(this, Constants.PAPER_EMAIL);
 //            phoneArrayList = Utils.getStringArrayList(this, Constants.PAPER_CONTACT);

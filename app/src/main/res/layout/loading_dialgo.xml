@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#95000000"
+    android:elevation="2dp"
+    android:orientation="vertical">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/round_corner_"
+        android:elevation="2dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_black"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/close"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="10dp"
+                android:padding="2.5dp"
+                android:src="@drawable/ic_pending_status"
+                android:tint="@color/black"
+                app:civ_border_color="@color/primary"
+                app:civ_border_width="2dp" />
+
+            <TextView
+                android:id="@+id/txt_dia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:paddingEnd="10dp"
+                android:text="Please Enter a unique job name"
+                android:textColor="@color/white"
+                android:textSize="17dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <TextView
+                android:id="@+id/representatives_id"
+                fontPath="fonts/gothambold.otf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="3dp"
+                android:fontFamily="@font/roboto_bold"
+                android:paddingTop="4dp"
+                android:paddingRight="18dp"
+                android:paddingBottom="4dp"
+                android:text="Enter Job name "
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/light_black"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbarsales" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:layout_marginStart="30dp"
+                    android:paddingStart="32dp"
+                    android:layout_marginEnd="30dp"
+                    android:id="@+id/show_image_alert_enter_enter_job"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/round_corner_"
+                    android:backgroundTint="#ddd"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:layout_marginStart="33dp"
+                    android:padding="3dp"
+                    android:layout_gravity="center_vertical"
+                    android:tint="@color/light_black"
+                    android:src="@drawable/ic_contact_form"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"/>
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/next"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/circular_background"
+                android:backgroundTint="@color/darkGray"
+                android:enabled="false"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Next"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

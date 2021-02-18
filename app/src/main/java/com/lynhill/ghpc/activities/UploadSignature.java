@@ -75,7 +75,8 @@ public class UploadSignature extends BaseActivity {
         if (position != -1) {
             intent.putExtra("position", position);
             Representatives representatives = Utils.getArrayList(this, Constants.REPRESENTATIVE_LIST).get(position);
-            signature.setImageURI(Uri.parse(representatives.getSignature()));
+            if (representatives.getSignature() != null)
+                signature.setImageURI(Uri.parse(representatives.getSignature()));
             haveSignature = true;
         }
     }

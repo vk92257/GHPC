@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:background="@color/white"
+
+    android:orientation="vertical"
+    tools:context=".activities.SampleImagesActivity">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,6 +19,9 @@
 
     android:orientation="vertical"
     tools:context=".activities.SampleImagesActivity">
+
+
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/toolbarsales"
@@ -89,10 +102,35 @@
         android:paddingTop="4dp"
         android:paddingEnd="10dp"
         android:paddingBottom="4dp"
-
         android:text="Upload"
         android:textColor="@color/white" />
 
 
 
 </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/sample_Image_progress_layout"
+        android:layout_width="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        android:focusableInTouchMode="true"
+        android:background="#95000000"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:theme="@style/Progress_bar"
+            android:layout_gravity="center"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+        <TextView
+            android:id="@+id/sample_image_progress_text"
+            android:text="Please wait while uploading your images."
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="35dp"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

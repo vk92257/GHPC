@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GHPC</string>
+    <string name="app_name">GHCP</string>
     <string name="signup">Sign UP</string>
     <string name="email">Enter Email</string>
     <string name="password">Enter Password</string>
@@ -11,6 +11,7 @@
     <string name="scan">Scan representative ID</string>
     <string name="txt_message">" Temp "</string>
     <string name="dialog_heading_msg">Select</string>
-    <string name="jobnimbus_token">kl22u923n5d3s6af</string>
-    <string name="have_you_loan_approved">Have you loan approved ?</string>
+<!--    <string name="jobnimbus_token">kl22u923n5d3s6af</string>-->
+    <string name="jobnimbus_token">kl9bljjrmvj49zzo</string>
+    <string name="have_you_loan_approved">Have your loan approved ?</string>
 </resources>

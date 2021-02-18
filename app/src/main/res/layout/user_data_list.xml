@@ -2,23 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:layout_width="match_parent"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="2dp"
     android:layout_height="wrap_content"
-    android:background="@color/white">
-<!--    android:background="#E3DFDF"-->
+    android:layout_marginTop="2dp"
+    android:background="@color/white"
+    android:layout_marginBottom="2dp">
+
+    <!--    android:background="#E3DFDF"-->
     <TextView
         android:id="@+id/user_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ddd"
-        android:fontFamily="sans-serif-condensed-light"
+       android:fontFamily="@font/roboto_mono"
         android:paddingStart="10dp"
-        android:paddingTop="6dp"
+        android:paddingTop="10dp"
         android:paddingEnd="10dp"
-        android:paddingBottom="6dp"
+        android:paddingBottom="10dp"
         android:text="Hello"
         android:textColor="@color/black"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
 </LinearLayout>
