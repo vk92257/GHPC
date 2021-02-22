@@ -3,14 +3,18 @@ package com.lynhill.ghpc.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,11 +26,13 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,6 +100,9 @@ public class SampleImagesActivity extends BaseActivity {
     private static int currentPosition;
     private FirebaseStorage firebaseStorage;
     private ArrayList<String> tempImages;
+    private int CAMERA_REQUEST_CODE = 444;
+    private String jnid;
+    private String imgageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,69 +158,22 @@ public class SampleImagesActivity extends BaseActivity {
         }
     }
 
-//    public void showCustomDialog() {
-//        final String[] status = {""};
-//        Dialog dialog1 = new Dialog(this);
-//        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog1.setCancelable(false);
-//        dialog1.setContentView(R.layout.alert_dialog);
-//        TextView success = dialog1.findViewById(R.id.success);
-//        TextView pending = dialog1.findViewById(R.id.pending);
-//        TextView fail = dialog1.findViewById(R.id.fail);
-//        TextView next = dialog1.findViewById(R.id.next);
-//
-//        success.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                pending.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
-//                fail.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
-//                success.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.primary)));
-//                status[0] = success.getText().toString();
-//                next.setEnabled(true);
-//                next.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.primary)));
-//
-//            }
-//        });
-//        pending.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                pending.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
-//                success.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
-//                fail.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
-//                status[0] = pending.getText().toString();
-//                next.setEnabled(true);
-//                next.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.primary)));
-//            }
-//        });
-//        fail.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                pending.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
-//                success.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_black)));
-//                fail.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-//                status[0] = fail.getText().toString();
-//                next.setEnabled(true);
-//                next.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.primary)));
-//            }
-//        });
-//        next.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                StorageManager.getInstance(AddNewClient.this).setLoanStatus(status[0]);
-//                Log.e(TAG, "onClick: " + StorageManager.getInstance(AddNewClient.this).getLoanStatus());
-//                dialog1.dismiss();
-//                startBankActivity2();
-//            }
-//        });
-//
-//        dialog1.show();
-//    }
 
-    //    onclick
     public void backpress(View view) {
         finish();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && requestCode == CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            }
+        } else {
+            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private File createImagevideoFile() throws IOException {
         // Create an image file name
@@ -244,10 +206,35 @@ public class SampleImagesActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CAMERA_CODE) {
+
+//            tempWork();
             sampleImagesList.add(uri.toString());
             sampleImageAdapter.notifyDataSetChanged();
         }
+
     }
+
+    public Bitmap StringToBitMap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0,
+                    encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+
+    public String BitMapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+
 
     private void setUpRv() {
 
@@ -259,9 +246,20 @@ public class SampleImagesActivity extends BaseActivity {
     }
 
     public void addEmployee(View view) {
-        dispatchTakePictureIntent();
+        checkPermissions();
     }
 
+    public void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            dispatchTakePictureIntent();
+        } else {
+            requestStoragePermission();
+        }
+    }
+
+    public void requestStoragePermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+    }
 
     public void upload(View view) {
         ArrayList<Representatives> list = null;
@@ -437,38 +435,56 @@ public class SampleImagesActivity extends BaseActivity {
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
         try {
             Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("name", rep.getProject());
-            requestBody.put("status_name", "Lead");
+            requestBody.put("first_name", rep.getName());
+            requestBody.put("record_type_name", "Customer");
             requestBody.put("country_name", "India");
-            requestBody.put("sales_rep_name", rep.getName());
+            requestBody.put("sales_rep_name", "Admin");
             requestBody.put("jnid", rep.getName());
-            requestBody.put("created_by_name", rep.getName());
+            requestBody.put("created_by", rep.getName());
 //            requestBody.put("address_line1", rep.getAddress());
             requestBody.put("address_line2", rep.getAddress());
 //            Log.e(TAG, "fastAndroidNtworking: " + rep.getSampleImages());
-            requestBody.put("image_id", rep.getSampleImages());
+//            requestBody.put("image_id", rep.getSampleImages());
 //            requestBody.put("tags",rep.getSampleImages());
             requestBody.put("email", rep.getEmali().get(0));
-            Log.e(TAG, "fastAndroidNtworking: " + requestBody);
+            if (rep.getPhoneNumber().size() >= 1)
+                requestBody.put("mobile_phone", rep.getPhoneNumber().get(0));
+            if (rep.getPhoneNumber().size() >= 2)
+                requestBody.put("work_phone", rep.getPhoneNumber().get(1));
+            if (rep.getPhoneNumber().size() >= 3)
+                requestBody.put("home_phone", rep.getPhoneNumber().get(2));
 
+
+            Log.e(TAG, "fastAndroidNtworking: " + requestBody);
             Call<Object> call = apiInterface.getUser(requestBody);
             call.enqueue(new Callback<Object>() {
                 @Override
                 public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
                     progressBarLayout.setVisibility(View.VISIBLE);
                     if (response.code() == 200) {
-
                         if (response.isSuccessful()) {
+//                            Log.e(TAG, "contact upload "+response.message());
+//                            Log.e(TAG, "contact upload toString "+response.toString());
+                            Log.e(TAG, "contact upload body " + response.body());
+//                            Log.e(TAG, "contact upload raw "+response.raw());
+//                            Log.e(TAG, "contact upload error body "+response.errorBody());
+                            Log.e(TAG, "contact upload gson " + new Gson().toJson(response.body()));
+                            try {
+                                JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body()));
+                                jnid = jsonObject.getString("jnid");
+                                if (jnid != null) {
+                                    Log.e(TAG, "onResponse: "+jnid );
+                                    uploadImageOnJobnimbus(jnid, rep.getSampleImages());
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
                             if (response.body().toString().contains("errorDuplicate job exists")) {
                                 Toast.makeText(SampleImagesActivity.this, "" + response.body(), Toast.LENGTH_SHORT).show();
                             } else {
                                 list.add(rep);
                                 Utils.saveArrayList(SampleImagesActivity.this, list, "rep");
-                                Intent intent = new Intent(SampleImagesActivity.this, MainDashBoard.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                finish();
                             }
 
                         } else {
@@ -481,6 +497,7 @@ public class SampleImagesActivity extends BaseActivity {
                     } else {
                         if (response.errorBody() != null) {
                             progressBarLayout.setVisibility(View.GONE);
+//
                             showCustomDialog(list, rep);
                             Toast.makeText(SampleImagesActivity.this, "" + TextStreamsKt.readText(response.errorBody().charStream()), Toast.LENGTH_SHORT).show();
                             Log.e(TAG, " onResponse: error  pata nahi  " + TextStreamsKt.readText(response.errorBody().charStream()));
@@ -514,6 +531,105 @@ public class SampleImagesActivity extends BaseActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void uploadImageOnJobnimbus(String jnid, ArrayList<String> sampleImages) {
+        progressBarLayout.setVisibility(View.VISIBLE);
+
+
+        for (int i = 0; i < sampleImages.size(); i++) {
+
+            OkHttpClient okClient = new OkHttpClient.Builder()
+                    .addInterceptor(
+                            new Interceptor() {
+                                @Override
+                                public okhttp3.Response intercept(Chain chain) throws IOException {
+                                    okhttp3.Request original = chain.request();
+
+                                    // Request customization: add request headers
+                                    okhttp3.Request.Builder requestBuilder = original.newBuilder()
+                                            .header("Authorization", "bearer" + getResources().getString(R.string.jobnimbus_token))
+                                            .header("Content-Type", "application/json")
+                                            .method(original.method(), original.body());
+                                    okhttp3.Request request = requestBuilder.build();
+                                    return chain.proceed(request);
+                                }
+                            })
+                    .build();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(APIConstans.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okClient)
+                    .build();
+            ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+            try {
+                Map<String, Object> requestBody = new HashMap<>();
+
+                requestBody.put("related", jnid);
+                requestBody.put("type", "photo");
+                requestBody.put("url", sampleImages.get(i));
+                    Log.e(TAG, " contact: " + requestBody);
+                Call<Object> call = apiInterface.uploadUser(requestBody);
+                Log.e(TAG, jnid+" contact  "+sampleImages.get(i));
+                int finalI = i;
+                call.enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                        progressBarLayout.setVisibility(View.VISIBLE);
+                        if (response.code() == 200) {
+
+                            if (response.isSuccessful()) {
+                                Log.e(TAG, finalI+ " onResponse: "+(sampleImages.size()-1));
+                                if (finalI == sampleImages.size() - 1) {
+                                    Intent intent = new Intent(SampleImagesActivity.this, MainDashBoard.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            } else {
+                                Log.e(TAG, "onResponse: error --->" + TextStreamsKt.readText(response.errorBody().charStream()));
+                                if (response.body().toString().contains("Duplicate job exists"))
+                                    Toast.makeText(SampleImagesActivity.this, "" + response.body(), Toast.LENGTH_SHORT).show();
+//                            Log.e("TAG", "onResponse: " + response.body());
+
+                            }
+                        } else {
+                            if (response.errorBody() != null) {
+                                progressBarLayout.setVisibility(View.GONE);
+                                Toast.makeText(SampleImagesActivity.this, "" + TextStreamsKt.readText(response.errorBody().charStream()), Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, " onResponse: error  pata nahi  " + TextStreamsKt.readText(response.errorBody().charStream()));
+
+
+//                            JSONObject jsonObj;
+//                            try {
+//                                jsonObj = new JSONObject(TextStreamsKt.readText(response.errorBody().charStream()));
+//                                Toast.makeText(SampleImagesActivity.this, "" + jsonObj.getString("msg"), Toast.LENGTH_SHORT).show();
+//                                Log.e(TAG, "onResponse:  error  ky aho rahra hai " + jsonObj.getString("msg"));
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+
+                            }
+
+                        }
+//                    try {
+//                        JSONObject object=new JSONObject(new Gson().toJson(response.body()));
+//                        Log.e("TAG", "onResponse: "+response );
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        Log.e(TAG, "onFailure: " + call.toString());
+                        progressBarLayout.setVisibility(View.INVISIBLE);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -554,7 +670,7 @@ public class SampleImagesActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(jobName.getText().toString())) {
-                    rep.setProject(jobName.getText().toString());
+                    rep.setName(jobName.getText().toString());
                     fastAndroidNtworking(list, rep);
                     dialog1.dismiss();
                 } else {
@@ -574,5 +690,6 @@ public class SampleImagesActivity extends BaseActivity {
             jobPostRequest.cancel();
         }
     }
+
 
 }

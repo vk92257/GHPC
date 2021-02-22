@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -98,10 +99,89 @@ public class MainDashBoard extends BaseActivity {
             }
         }
 //        getJobsVolleyRequest();
+//        uploadImageOnJobnimbus("ueueueh");
+    }
+    private void uploadImageOnJobnimbus(String jnid) {
+//        progressBarLayout.setVisibility(View.VISIBLE);
+
+
+//        for (int i = 0; i < sampleImages.size(); i++) {
+        OkHttpClient okClient = new OkHttpClient.Builder()
+                    .addInterceptor(
+                            new Interceptor() {
+                                @Override
+                                public okhttp3.Response intercept(Chain chain) throws IOException {
+                                    okhttp3.Request original = chain.request();
+
+                                    // Request customization: add request headers
+                                    okhttp3.Request.Builder requestBuilder = original.newBuilder()
+                                            .header("Authorization", "bearer" + getResources().getString(R.string.jobnimbus_token))
+                                            .header("Content-Type", "application/json")
+                                            .method(original.method(), original.body());
+                                    okhttp3.Request request = requestBuilder.build();
+                                    return chain.proceed(request);
+                                }
+                            })
+                    .build();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(APIConstans.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okClient)
+                    .build();
+            ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+            try {
+                Map<String, Object> requestBody = new HashMap<>();
+
+//                requestBody.put("related", new ArrayList<String>().add(jnid));
+                requestBody.put("related", jnid);
+                requestBody.put("type", "photo");
+                requestBody.put("url", "https://firebasestorage.googleapis.com/v0/b/ghpc-d43d4.appspot.com/o/profile%2Fimage_1613915333266.jpg?alt=media&token=d952495f-a1b5-4dc8-a910-723a8f2f279f");
+                Log.e(TAG, " contact: " + requestBody);
+                Call<Object> call = apiInterface.uploadUser(requestBody);
+
+//                int finalI = i;
+                call.enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+//                        progressBarLayout.setVisibility(View.VISIBLE);
+                        if (response.code() == 200) {
+
+                            if (response.isSuccessful()) {
+
+                                Log.e(TAG, "onResponse: "+response.body());
+                            } else {
+                                Log.e(TAG, "onResponse: error --->" + TextStreamsKt.readText(response.errorBody().charStream()));
+                                if (response.body().toString().contains("Duplicate job exists"))
+                                    Toast.makeText(MainDashBoard.this, "" + response.body(), Toast.LENGTH_SHORT).show();
+//                            Log.e("TAG", "onResponse: " + response.body());
+
+                            }
+                        } else {
+                            if (response.errorBody() != null) {
+//                                progressBarLayout.setVisibility(View.GONE);
+                                Toast.makeText(MainDashBoard.this, "" + TextStreamsKt.readText(response.errorBody().charStream()), Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, " onResponse: error  pata nahi  " + TextStreamsKt.readText(response.errorBody().charStream()));
+
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        Log.e(TAG, "onFailure: " + call.toString());
+//                        progressBarLayout.setVisibility(View.INVISIBLE);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//        }
     }
 
     private void getJobsVolleyRequest() {
-        getContactsRequest = new StringRequest(Request.Method.GET, APIConstans.BASE_URL + APIConstans.JOB,
+        getContactsRequest = new StringRequest(Request.Method.GET, "https://app.jobnimbus.com/api1/contacts",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -144,8 +224,22 @@ public class MainDashBoard extends BaseActivity {
             for (int i = 0; i < totalJobsCount; i++) {
                 Representatives rep = new Representatives();
                 JSONObject jobsData = listOfJobs.getJSONObject(i);
-                rep.setName(jobsData.getString("jnid"));
-                rep.setProject(jobsData.getString("name"));
+                rep.setName(jobsData.getString("first_name"));
+                if (jobsData.has("address_line2") && !jobsData.isNull("address_line2"))
+                rep.setAddress(jobsData.getString("address_line2"));
+
+                if (jobsData.has("image_id") && !jobsData.isNull("image_id")) {
+                    ArrayList<String> strings1 = new ArrayList<>();
+                    strings1.add(jobsData.getString("mobile_phone"));
+                    rep.setPhoneNumber(strings1);
+                }
+
+                ArrayList<String> email = new ArrayList<>();
+                email.add(jobsData.getString("email"));
+                rep.setPhoneNumber(email);
+
+
+
                 if (jobsData.has("image_id") && !jobsData.isNull("image_id")) {
 //                if (!jobsData.toString().contains("\"image_id\": null") ) {
                     JSONArray images = jobsData.getJSONArray("image_id");
