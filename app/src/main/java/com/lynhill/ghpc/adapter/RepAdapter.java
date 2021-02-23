@@ -3,6 +3,7 @@ package com.lynhill.ghpc.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.lynhill.ghpc.R;
+import com.lynhill.ghpc.activities.AddNewClient;
 import com.lynhill.ghpc.activities.Representative_detail;
 import com.lynhill.ghpc.listener.UserInfoListener;
 import com.lynhill.ghpc.pojo.Representatives;
+import com.lynhill.ghpc.util.StorageManager;
 
 import org.w3c.dom.Text;
 
@@ -52,15 +55,15 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.MyViewHolder> {
         holder.username.setText(rep.getName());
         holder.email.setText(rep.getEmali().get(0));
         holder.address.setText(rep.getAddress());
-
         holder.phone.setText(" "+rep.getPhoneNumber());
-
-
         holder.root_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, Representative_detail.class);
+                Intent intent = new Intent(context, AddNewClient.class);
+                Log.e("TAG", "onClick: "+position );
+                StorageManager.getInstance(context).setCurrentUser(position);
                 context.startActivity(intent);
+
             }
         });
 

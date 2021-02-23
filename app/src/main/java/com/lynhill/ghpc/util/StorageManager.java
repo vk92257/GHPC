@@ -21,6 +21,44 @@ public class StorageManager {
         editor = preferences.edit();
     }
 
+    public void setBackPressed(Boolean token) {
+        editor.putBoolean("backPress", token);
+        editor.commit();
+    }
+
+    public boolean isBackPressed() {
+        return preferences.getBoolean("backPress", false);
+    }
+
+
+
+    public void setCurrentUser(int token) {
+        editor.putInt("currentUser", token);
+        editor.commit();
+    }
+
+    public int getCurrentUser() {
+        return preferences.getInt("currentUser", -1);
+    }
+
+    public void setLoanStatus(String token) {
+        editor.putString("loanStatus", token);
+        editor.commit();
+    }
+
+    public String getLoanStatus() {
+        return preferences.getString("loanStatus", "");
+    }
+
+    public void setUserProject(String token) {
+        editor.putString("project", token);
+        editor.commit();
+    }
+
+    public String getUserProject() {
+        return preferences.getString("project", "");
+    }
+
     public void setUserAddress(String token) {
         editor.putString("address", token);
         editor.commit();

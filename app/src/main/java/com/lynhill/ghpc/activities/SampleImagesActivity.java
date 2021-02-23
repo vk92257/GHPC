@@ -23,6 +23,7 @@ import com.lynhill.ghpc.adapter.SampleImageAdapter;
 import com.lynhill.ghpc.pojo.Representatives;
 import com.lynhill.ghpc.util.Constants;
 import com.lynhill.ghpc.util.StorageManager;
+import com.lynhill.ghpc.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,11 +35,11 @@ import io.paperdb.Paper;
 public class SampleImagesActivity extends BaseActivity {
     private static final String TAG = SampleImagesActivity.class.getSimpleName();
     private static final int REQUEST_CAMERA_CODE = 250;
-    RecyclerView sampleImages;
+    private RecyclerView sampleImages;
     private String currentPhotoPath;
     private SampleImageAdapter sampleImageAdapter;
-    private ArrayList<String> sampleImagesList;
-    private int numberOfColumns =2;
+    private ArrayList<String> sampleImagesList = new ArrayList<>();
+    private int numberOfColumns = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,21 @@ public class SampleImagesActivity extends BaseActivity {
         setContentView(R.layout.activity_sample_images);
         sampleImages = findViewById(R.id.sample_image_rv);
         setUpRv();
+        storedSampleImages();
+    }
+
+    private void storedSampleImages() {
+
+//        int position = StorageManager.getInstance(this).getCurrentUser();
+        int position = getIntent().getIntExtra("position",-1);
+        Log.e(TAG, "storedSampleImages: "+position );
+        if (position != -1) {
+            Representatives representatives = Utils.getArrayList(this, Constants.REPRESENTATIVE_LIST).get(position);
+            Log.e(TAG, "storedSampleImages: "+sampleImagesList.size() );
+            sampleImagesList.addAll(representatives.getSampleImages());
+            sampleImageAdapter.notifyDataSetChanged();
+
+        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -77,8 +93,8 @@ public class SampleImagesActivity extends BaseActivity {
     }
 
 
-//    onclick
-    public void backpress(View view){
+    //    onclick
+    public void backpress(View view) {
         finish();
     }
 
@@ -89,7 +105,7 @@ public class SampleImagesActivity extends BaseActivity {
         String imageFileName;
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File filename;
-        imageFileName = "."+StorageManager.getInstance(this).getUserName()+timeStamp + "_";
+        imageFileName = "." + StorageManager.getInstance(this).getUserName() + timeStamp + "_";
         filename = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -119,7 +135,6 @@ public class SampleImagesActivity extends BaseActivity {
     }
 
     private void setUpRv() {
-        sampleImagesList = new ArrayList<>();
 
 //        sampleImages.setLayoutManager(new LinearLayoutManager(this));
         sampleImages.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
@@ -132,18 +147,20 @@ public class SampleImagesActivity extends BaseActivity {
         dispatchTakePictureIntent();
     }
 
+
     public void upload(View view) {
         ArrayList<Representatives> list = null;
         Representatives rep = new Representatives();
         StorageManager st = StorageManager.getInstance(this);
         if (!TextUtils.isEmpty(st.getUserName())) {
             rep.setName(st.getUserName());
-            Log.e(TAG, "upload: " + st.getUserName());
+
         } else {
             Log.e(TAG, "upload: error in username ");
         }
         if (!TextUtils.isEmpty(st.getUserAddress())) {
             rep.setAddress(st.getUserAddress());
+            Log.e(TAG, "upload: " + st.getUserAddress());
         } else {
             Log.e(TAG, "upload: error in address ");
         }
@@ -152,16 +169,16 @@ public class SampleImagesActivity extends BaseActivity {
         } else {
             Log.e(TAG, "upload: error in dob ");
         }
-//        if (!TextUtils.isEmpty(st.getUserEmail())) {
-//            rep.setEmali(st.getUserEmail());
-//        } else {
-//            Log.e(TAG, "upload: error in email ");
-//        }
-//        if (!TextUtils.isEmpty(st.getUserPhoneNumber())) {
-//            rep.setPhoneNumber(st.getUserPhoneNumber());
-//        } else {
-//            Log.e(TAG, "upload: error in phone number ");
-//        }
+        if (Utils.getStringArrayList(this, Constants.PAPER_EMAIL) != null) {
+            rep.setEmali(Utils.getStringArrayList(this, Constants.PAPER_EMAIL));
+        } else {
+            Log.e(TAG, "upload: error in email ");
+        }
+        if (Utils.getStringArrayList(this, Constants.PAPER_EMAIL) != null) {
+            rep.setPhoneNumber(Utils.getStringArrayList(this, Constants.PAPER_CONTACT));
+        } else {
+            Log.e(TAG, "upload: error in phone number ");
+        }
         if (!TextUtils.isEmpty(st.getUserSignature())) {
             rep.setSignature(st.getUserSignature());
         } else {
@@ -170,26 +187,88 @@ public class SampleImagesActivity extends BaseActivity {
         if (sampleImagesList != null) {
             rep.setSampleImages(sampleImagesList);
         } else {
-            Log.e(TAG, "upload: error in sample image  ");
+            Log.e(TAG, "upload: error in sample image  " + list.size());
         }
-        if (Paper.book().read("rep") != null) {
-            list = Paper.book().read("rep");
-            list.add(rep);
-            Log.e(TAG, "upload: list is there  ");
+
+        if (Utils.getStringArrayList(this, "rep") != null) {
+            list = Utils.getArrayList(SampleImagesActivity.this, "rep");
+            Log.e(TAG, "upload: before list is there  " + list.size());
         } else {
             list = new ArrayList<>();
-            list.add(rep);
-            Log.e(TAG, "upload: list is not there");
-
         }
-            rep.setPhoneNumber(Paper.book().read(Constants.PAPER_CONTACT));
-            rep.setEmali(Paper.book().read(Constants.PAPER_EMAIL));
-//        if ()
 
-        Paper.book().write("rep", list);
+        rep.setProject(StorageManager.getInstance(this).getUserProject());
+        list.add(rep);
+        Utils.saveArrayList(SampleImagesActivity.this, list, "rep");
+        Log.e(TAG, "upload: after list is there  " + Utils.getArrayList(SampleImagesActivity.this, "rep").size());
         Intent intent = new Intent(this, MainDashBoard.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
+
+//    public void upload(View view) {
+//        ArrayList<Representatives> list = null;
+//        Representatives rep = new Representatives();
+//        StorageManager st = StorageManager.getInstance(this);
+//        if (!TextUtils.isEmpty(st.getUserName())) {
+//            rep.setName(st.getUserName());
+//            Log.e(TAG, "upload: " + st.getUserName());
+//        } else {
+//            Log.e(TAG, "upload: error in username ");
+//        }
+//        if (!TextUtils.isEmpty(st.getUserAddress())) {
+//            rep.setAddress(st.getUserAddress());
+//        } else {
+//            Log.e(TAG, "upload: error in address ");
+//        }
+//        if (!TextUtils.isEmpty(st.getUserDOB())) {
+//            rep.setDob(st.getUserDOB());
+//        } else {
+//            Log.e(TAG, "upload: error in dob ");
+//        }
+////        if (!TextUtils.isEmpty(st.getUserEmail())) {
+////            rep.setEmali(st.getUserEmail());
+////        } else {
+////            Log.e(TAG, "upload: error in email ");
+////        }
+////        if (!TextUtils.isEmpty(st.getUserPhoneNumber())) {
+////            rep.setPhoneNumber(st.getUserPhoneNumber());
+////        } else {
+////            Log.e(TAG, "upload: error in phone number ");
+////        }
+//        if (!TextUtils.isEmpty(st.getUserSignature())) {
+//            rep.setSignature(st.getUserSignature());
+//        } else {
+//            Log.e(TAG, "upload: error in signature ");
+//        }
+//        if (sampleImagesList != null) {
+//            rep.setSampleImages(sampleImagesList);
+//        } else {
+//            Log.e(TAG, "upload: error in sample image  ");
+//        }
+////        if (Paper.book().read("rep") != null) {
+////            list = Paper.book().read("rep");
+////            list.add(rep);
+////            Log.e(TAG, "upload: list is there  ");
+////        } else {
+////            list = new ArrayList<>();
+////            list.add(rep);
+////            Log.e(TAG, "upload: list is not there");
+////
+////        }
+//            rep.setPhoneNumber(Paper.book().read(Constants.PAPER_CONTACT));
+//            rep.setEmali(Paper.book().read(Constants.PAPER_EMAIL));
+////        if ()
+//
+//        Paper.book().write("rep", list);
+//        Intent intent = new Intent(this, MainDashBoard.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
+//        finish();
+//        list = Utils.getArrayList(SampleImagesActivity.this, "rep");
+//        list.add(rep);
+//        Log.e(TAG, "upload: list is there  ");
+//        Utils.saveArrayList(SampleImagesActivity.this, list, "rep");
+//    }
 }

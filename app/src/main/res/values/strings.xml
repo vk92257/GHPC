@@ -8,7 +8,9 @@
     <string name="nothaveaccount">Have an Account ?<font fgcolor='#87C443'><b> Sign In</b></font></string>
     <string name="enter_adress">Enter Adress</string>
     <string name="enter_address">Enter Address</string>
-    <string name="scan">Scan customer ID</string>
+    <string name="scan">Scan representative ID</string>
     <string name="txt_message">" Temp "</string>
     <string name="dialog_heading_msg">Select</string>
+    <string name="jobnimbus_token">kl22u923n5d3s6af</string>
+    <string name="have_you_loan_approved">Have you loan approved ?</string>
 </resources>

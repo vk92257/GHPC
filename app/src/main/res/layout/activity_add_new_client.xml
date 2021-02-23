@@ -348,6 +348,41 @@
                 android:padding="9dp">
 
                 <TextView
+                    fontPath="fonts/gothambold.otf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:elevation="3dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:paddingTop="4dp"
+                    android:paddingRight="18dp"
+                    android:paddingBottom="4dp"
+                    android:text="Select Lender"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/light_black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toolbarsales" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/backgroun_project"
+                    android:minHeight="30dp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/backgroun_project"
+                android:elevation="5dp"
+                android:orientation="vertical"
+                android:padding="9dp">
+
+                <TextView
                     android:id="@+id/representatives_id"
                     fontPath="fonts/gothambold.otf"
                     android:layout_width="match_parent"
@@ -414,7 +449,7 @@
                         android:gravity="center"
                         android:onClick="female"
                         android:padding="10dp"
-                        android:text=" Hvac"
+                        android:text="Hvac"
                         android:textColor="@android:color/white"
                         android:textSize="16sp" />
                 </LinearLayout>
