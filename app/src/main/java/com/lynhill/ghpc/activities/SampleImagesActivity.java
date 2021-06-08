@@ -1,36 +1,89 @@
 package com.lynhill.ghpc.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.lynhill.ghpc.BuildConfig;
 import com.lynhill.ghpc.R;
 import com.lynhill.ghpc.adapter.SampleImageAdapter;
 import com.lynhill.ghpc.pojo.Representatives;
+import com.lynhill.ghpc.util.APIConstans;
+import com.lynhill.ghpc.util.ApiInterface;
 import com.lynhill.ghpc.util.Constants;
 import com.lynhill.ghpc.util.StorageManager;
 import com.lynhill.ghpc.util.Utils;
+import com.lynhill.ghpc.util.VolleySingleton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.paperdb.Paper;
+import kotlin.io.TextStreamsKt;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SampleImagesActivity extends BaseActivity {
     private static final String TAG = SampleImagesActivity.class.getSimpleName();
@@ -40,12 +93,25 @@ public class SampleImagesActivity extends BaseActivity {
     private SampleImageAdapter sampleImageAdapter;
     private ArrayList<String> sampleImagesList = new ArrayList<>();
     private int numberOfColumns = 2;
+    private StringRequest jobPostRequest;
+    private Uri uri;
+    private FrameLayout progressBarLayout;
+    private TextView progressText;
+    private static int currentPosition;
+    private FirebaseStorage firebaseStorage;
+    private ArrayList<String> tempImages;
+    private int CAMERA_REQUEST_CODE = 444;
+    private String jnid;
+    private String imgageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample_images);
         sampleImages = findViewById(R.id.sample_image_rv);
+        progressBarLayout = findViewById(R.id.sample_Image_progress_layout);
+        progressText = findViewById(R.id.sample_image_progress_text);
+        firebaseStorage = FirebaseStorage.getInstance();
         setUpRv();
         storedSampleImages();
     }
@@ -53,11 +119,11 @@ public class SampleImagesActivity extends BaseActivity {
     private void storedSampleImages() {
 
 //        int position = StorageManager.getInstance(this).getCurrentUser();
-        int position = getIntent().getIntExtra("position",-1);
-        Log.e(TAG, "storedSampleImages: "+position );
+        int position = getIntent().getIntExtra("position", -1);
+        Log.e(TAG, "storedSampleImages: " + position);
         if (position != -1) {
             Representatives representatives = Utils.getArrayList(this, Constants.REPRESENTATIVE_LIST).get(position);
-            Log.e(TAG, "storedSampleImages: "+sampleImagesList.size() );
+            Log.e(TAG, "storedSampleImages: " + sampleImagesList.size());
             sampleImagesList.addAll(representatives.getSampleImages());
             sampleImageAdapter.notifyDataSetChanged();
 
@@ -93,11 +159,21 @@ public class SampleImagesActivity extends BaseActivity {
     }
 
 
-    //    onclick
     public void backpress(View view) {
         finish();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && requestCode == CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            }
+        } else {
+            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private File createImagevideoFile() throws IOException {
         // Create an image file name
@@ -113,6 +189,7 @@ public class SampleImagesActivity extends BaseActivity {
         );
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = filename.getAbsolutePath();
+        uri = Uri.fromFile(filename);
 //        } else {
 //            imageFileName = "VID_" + timeStamp + "_";
 //            filename = File.createTempFile(
@@ -129,10 +206,35 @@ public class SampleImagesActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CAMERA_CODE) {
-            sampleImagesList.add(currentPhotoPath);
+
+//            tempWork();
+            sampleImagesList.add(uri.toString());
             sampleImageAdapter.notifyDataSetChanged();
         }
+
     }
+
+    public Bitmap StringToBitMap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0,
+                    encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+
+    public String BitMapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+
 
     private void setUpRv() {
 
@@ -144,9 +246,20 @@ public class SampleImagesActivity extends BaseActivity {
     }
 
     public void addEmployee(View view) {
-        dispatchTakePictureIntent();
+        checkPermissions();
     }
 
+    public void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            dispatchTakePictureIntent();
+        } else {
+            requestStoragePermission();
+        }
+    }
+
+    public void requestStoragePermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+    }
 
     public void upload(View view) {
         ArrayList<Representatives> list = null;
@@ -156,119 +269,427 @@ public class SampleImagesActivity extends BaseActivity {
             rep.setName(st.getUserName());
 
         } else {
-            Log.e(TAG, "upload: error in username ");
+//            Log.e(TAG, "upload: error in username ");
         }
         if (!TextUtils.isEmpty(st.getUserAddress())) {
             rep.setAddress(st.getUserAddress());
-            Log.e(TAG, "upload: " + st.getUserAddress());
+//            Log.e(TAG, "upload: " + st.getUserAddress());
         } else {
-            Log.e(TAG, "upload: error in address ");
+//            Log.e(TAG, "upload: error in address ");
         }
         if (!TextUtils.isEmpty(st.getUserDOB())) {
             rep.setDob(st.getUserDOB());
         } else {
-            Log.e(TAG, "upload: error in dob ");
+//            Log.e(TAG, "upload: error in dob ");
         }
         if (Utils.getStringArrayList(this, Constants.PAPER_EMAIL) != null) {
             rep.setEmali(Utils.getStringArrayList(this, Constants.PAPER_EMAIL));
         } else {
-            Log.e(TAG, "upload: error in email ");
+//            Log.e(TAG, "upload: error in email ");
         }
         if (Utils.getStringArrayList(this, Constants.PAPER_EMAIL) != null) {
             rep.setPhoneNumber(Utils.getStringArrayList(this, Constants.PAPER_CONTACT));
         } else {
-            Log.e(TAG, "upload: error in phone number ");
+//            Log.e(TAG, "upload: error in phone number ");
         }
         if (!TextUtils.isEmpty(st.getUserSignature())) {
             rep.setSignature(st.getUserSignature());
         } else {
-            Log.e(TAG, "upload: error in signature ");
+//            Log.e(TAG, "upload: error in signature ");
         }
         if (sampleImagesList != null) {
+            if (sampleImagesList.size() == 0) {
+                Toast.makeText(this, "Please add site images.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Log.e(TAG, "Compare " + sampleImagesList.size());
+            currentPosition = sampleImagesList.size();
             rep.setSampleImages(sampleImagesList);
         } else {
-            Log.e(TAG, "upload: error in sample image  " + list.size());
+            return;
         }
 
         if (Utils.getStringArrayList(this, "rep") != null) {
             list = Utils.getArrayList(SampleImagesActivity.this, "rep");
-            Log.e(TAG, "upload: before list is there  " + list.size());
+//            Log.e(TAG, "upload: before list is there  " + list.size());
         } else {
             list = new ArrayList<>();
         }
-
         rep.setProject(StorageManager.getInstance(this).getUserProject());
-        list.add(rep);
-        Utils.saveArrayList(SampleImagesActivity.this, list, "rep");
-        Log.e(TAG, "upload: after list is there  " + Utils.getArrayList(SampleImagesActivity.this, "rep").size());
-        Intent intent = new Intent(this, MainDashBoard.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+        if (getIntent().getIntExtra("position", -1) == -1) {
+//            list.add(rep);
+            for (int i = 0; i < rep.getSampleImages().size(); i++) {
+                firebaseUrlConverter(Uri.parse(rep.getSampleImages().get(i)), list, rep);
+            }
+        } else {
+            list.set(getIntent().getIntExtra("position", -1), rep);
+            Utils.saveArrayList(SampleImagesActivity.this, list, "rep");
+            Intent intent = new Intent(SampleImagesActivity.this, MainDashBoard.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        }
+
+
     }
 
-//    public void upload(View view) {
-//        ArrayList<Representatives> list = null;
-//        Representatives rep = new Representatives();
-//        StorageManager st = StorageManager.getInstance(this);
-//        if (!TextUtils.isEmpty(st.getUserName())) {
-//            rep.setName(st.getUserName());
-//            Log.e(TAG, "upload: " + st.getUserName());
-//        } else {
-//            Log.e(TAG, "upload: error in username ");
+    public static final Bitmap getBitmap(ContentResolver cr, Uri url)
+            throws FileNotFoundException, IOException {
+        InputStream input = cr.openInputStream(url);
+        Bitmap bitmap = BitmapFactory.decodeStream(input);
+        input.close();
+        return bitmap;
+    }
+
+    private void firebaseUrlConverter(Uri imageuri, ArrayList<Representatives> list, Representatives rep) {
+        progressBarLayout.setVisibility(View.VISIBLE);
+//        final int[] comparePostition = {1};
+        tempImages = new ArrayList<>();
+
+        StorageReference storageReference = firebaseStorage.getReference();
+        ContentResolver contentResolver = this.getContentResolver();
+        Bitmap originalImage = null;
+//        try {
+//            originalImage = getBitmap(contentResolver, imageuri);
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
-//        if (!TextUtils.isEmpty(st.getUserAddress())) {
-//            rep.setAddress(st.getUserAddress());
-//        } else {
-//            Log.e(TAG, "upload: error in address ");
-//        }
-//        if (!TextUtils.isEmpty(st.getUserDOB())) {
-//            rep.setDob(st.getUserDOB());
-//        } else {
-//            Log.e(TAG, "upload: error in dob ");
-//        }
-////        if (!TextUtils.isEmpty(st.getUserEmail())) {
-////            rep.setEmali(st.getUserEmail());
-////        } else {
-////            Log.e(TAG, "upload: error in email ");
-////        }
-////        if (!TextUtils.isEmpty(st.getUserPhoneNumber())) {
-////            rep.setPhoneNumber(st.getUserPhoneNumber());
-////        } else {
-////            Log.e(TAG, "upload: error in phone number ");
-////        }
-//        if (!TextUtils.isEmpty(st.getUserSignature())) {
-//            rep.setSignature(st.getUserSignature());
-//        } else {
-//            Log.e(TAG, "upload: error in signature ");
-//        }
-//        if (sampleImagesList != null) {
-//            rep.setSampleImages(sampleImagesList);
-//        } else {
-//            Log.e(TAG, "upload: error in sample image  ");
-//        }
-////        if (Paper.book().read("rep") != null) {
-////            list = Paper.book().read("rep");
-////            list.add(rep);
-////            Log.e(TAG, "upload: list is there  ");
-////        } else {
-////            list = new ArrayList<>();
-////            list.add(rep);
-////            Log.e(TAG, "upload: list is not there");
-////
-////        }
-//            rep.setPhoneNumber(Paper.book().read(Constants.PAPER_CONTACT));
-//            rep.setEmali(Paper.book().read(Constants.PAPER_EMAIL));
-////        if ()
+        try {
+            originalImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageuri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        assert originalImage != null;
+        originalImage.compress(Bitmap.CompressFormat.JPEG, 10, outputStream);
+        byte[] data = outputStream.toByteArray();
+        Calendar calendar = Calendar.getInstance();
+        //Returns current time in millis
+        long timeMilli2 = calendar.getTimeInMillis();
+        StorageReference reference = storageReference.child("profile")
+                .child("image_" + String.valueOf(timeMilli2) + ".jpg");
+        reference.putFile(imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG, "onSuccess: second");
+                Uri downloadUrl = taskSnapshot.getUploadSessionUri();
+                reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        tempImages.add(uri.toString());
+                        Log.e(TAG, "compare  --> " + currentPosition + " <> " + tempImages.size());
+//                        comparePostition[0]++;
+                        progressText.setText("Please wait while uploading your images(" + tempImages.size() + " of " + sampleImageAdapter.getItemCount() + ")");
+                        if (tempImages.size() == sampleImageAdapter.getItemCount())
+                            fastAndroidNtworking(list, rep);
+                        Log.e(TAG, "onSuccess: " + uri.toString());
+//                        storedata(uri.toString());
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressBarLayout.setVisibility(View.INVISIBLE);
+                        Log.d(TAG, "onFailure: " + e.getMessage());
+                    }
+                })
+                ;
+//                imageuri = downloadUrl.toString();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressBarLayout.setVisibility(View.INVISIBLE);
+                Log.d(TAG, "onFailure: " + e.getMessage());
+            }
+        });
+    }
+
+    private void fastAndroidNtworking(ArrayList<Representatives> list, Representatives rep) {
+        if (tempImages != null) {
+            rep.setSampleImages(tempImages);
+        }
+        progressBarLayout.setVisibility(View.VISIBLE);
+        OkHttpClient okClient = new OkHttpClient.Builder()
+                .addInterceptor(
+                        new Interceptor() {
+                            @Override
+                            public okhttp3.Response intercept(Chain chain) throws IOException {
+                                okhttp3.Request original = chain.request();
+
+                                // Request customization: add request headers
+                                okhttp3.Request.Builder requestBuilder = original.newBuilder()
+                                        .header("Authorization", "bearer" + getResources().getString(R.string.jobnimbus_token))
+                                        .header("Content-Type", "application/json")
+                                        .method(original.method(), original.body());
+
+                                okhttp3.Request request = requestBuilder.build();
+                                return chain.proceed(request);
+                            }
+                        })
+                .build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(APIConstans.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okClient)
+                .build();
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+        try {
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("first_name", rep.getName());
+            requestBody.put("record_type_name", "Customer");
+            requestBody.put("country_name", "India");
+            requestBody.put("sales_rep_name", "Admin");
+            requestBody.put("jnid", rep.getName());
+            requestBody.put("created_by", rep.getName());
+//            requestBody.put("address_line1", rep.getAddress());
+            requestBody.put("address_line2", rep.getAddress());
+//            Log.e(TAG, "fastAndroidNtworking: " + rep.getSampleImages());
+//            requestBody.put("image_id", rep.getSampleImages());
+//            requestBody.put("tags",rep.getSampleImages());
+            requestBody.put("email", rep.getEmali().get(0));
+            if (rep.getPhoneNumber().size() >= 1)
+                requestBody.put("mobile_phone", rep.getPhoneNumber().get(0));
+            if (rep.getPhoneNumber().size() >= 2)
+                requestBody.put("work_phone", rep.getPhoneNumber().get(1));
+            if (rep.getPhoneNumber().size() >= 3)
+                requestBody.put("home_phone", rep.getPhoneNumber().get(2));
+
+
+            Log.e(TAG, "fastAndroidNtworking: " + requestBody);
+            Call<Object> call = apiInterface.getUser(requestBody);
+            call.enqueue(new Callback<Object>() {
+                @Override
+                public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                    progressBarLayout.setVisibility(View.VISIBLE);
+                    if (response.code() == 200) {
+                        if (response.isSuccessful()) {
+//                            Log.e(TAG, "contact upload "+response.message());
+//                            Log.e(TAG, "contact upload toString "+response.toString());
+                            Log.e(TAG, "contact upload body " + response.body());
+//                            Log.e(TAG, "contact upload raw "+response.raw());
+//                            Log.e(TAG, "contact upload error body "+response.errorBody());
+                            Log.e(TAG, "contact upload gson " + new Gson().toJson(response.body()));
+                            try {
+                                JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body()));
+                                jnid = jsonObject.getString("jnid");
+                                if (jnid != null) {
+                                    Log.e(TAG, "onResponse: "+jnid );
+                                    uploadImageOnJobnimbus(jnid, rep.getSampleImages());
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (response.body().toString().contains("errorDuplicate job exists")) {
+                                Toast.makeText(SampleImagesActivity.this, "" + response.body(), Toast.LENGTH_SHORT).show();
+                            } else {
+                                list.add(rep);
+                                Utils.saveArrayList(SampleImagesActivity.this, list, "rep");
+                            }
+
+                        } else {
+                            Log.e(TAG, "onResponse: error --->" + TextStreamsKt.readText(response.errorBody().charStream()));
+                            if (response.body().toString().contains("Duplicate job exists"))
+                                Toast.makeText(SampleImagesActivity.this, "" + response.body(), Toast.LENGTH_SHORT).show();
+//                            Log.e("TAG", "onResponse: " + response.body());
+
+                        }
+                    } else {
+                        if (response.errorBody() != null) {
+                            progressBarLayout.setVisibility(View.GONE);
 //
-//        Paper.book().write("rep", list);
-//        Intent intent = new Intent(this, MainDashBoard.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(intent);
-//        finish();
-//        list = Utils.getArrayList(SampleImagesActivity.this, "rep");
-//        list.add(rep);
-//        Log.e(TAG, "upload: list is there  ");
-//        Utils.saveArrayList(SampleImagesActivity.this, list, "rep");
-//    }
+                            showCustomDialog(list, rep);
+                            Toast.makeText(SampleImagesActivity.this, "" + TextStreamsKt.readText(response.errorBody().charStream()), Toast.LENGTH_SHORT).show();
+                            Log.e(TAG, " onResponse: error  pata nahi  " + TextStreamsKt.readText(response.errorBody().charStream()));
+
+
+//                            JSONObject jsonObj;
+//                            try {
+//                                jsonObj = new JSONObject(TextStreamsKt.readText(response.errorBody().charStream()));
+//                                Toast.makeText(SampleImagesActivity.this, "" + jsonObj.getString("msg"), Toast.LENGTH_SHORT).show();
+//                                Log.e(TAG, "onResponse:  error  ky aho rahra hai " + jsonObj.getString("msg"));
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+
+                        }
+
+                    }
+//                    try {
+//                        JSONObject object=new JSONObject(new Gson().toJson(response.body()));
+//                        Log.e("TAG", "onResponse: "+response );
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+                }
+
+                @Override
+                public void onFailure(Call<Object> call, Throwable t) {
+                    Log.e(TAG, "onFailure: " + call.toString());
+                    progressBarLayout.setVisibility(View.INVISIBLE);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void uploadImageOnJobnimbus(String jnid, ArrayList<String> sampleImages) {
+        progressBarLayout.setVisibility(View.VISIBLE);
+
+
+        for (int i = 0; i < sampleImages.size(); i++) {
+
+            OkHttpClient okClient = new OkHttpClient.Builder()
+                    .addInterceptor(
+                            new Interceptor() {
+                                @Override
+                                public okhttp3.Response intercept(Chain chain) throws IOException {
+                                    okhttp3.Request original = chain.request();
+
+                                    // Request customization: add request headers
+                                    okhttp3.Request.Builder requestBuilder = original.newBuilder()
+                                            .header("Authorization", "bearer" + getResources().getString(R.string.jobnimbus_token))
+                                            .header("Content-Type", "application/json")
+                                            .method(original.method(), original.body());
+                                    okhttp3.Request request = requestBuilder.build();
+                                    return chain.proceed(request);
+                                }
+                            })
+                    .build();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(APIConstans.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okClient)
+                    .build();
+            ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+            try {
+                Map<String, Object> requestBody = new HashMap<>();
+
+                requestBody.put("related", jnid);
+                requestBody.put("type", "photo");
+                requestBody.put("url", sampleImages.get(i));
+                    Log.e(TAG, " contact: " + requestBody);
+                Call<Object> call = apiInterface.uploadUser(requestBody);
+                Log.e(TAG, jnid+" contact  "+sampleImages.get(i));
+                int finalI = i;
+                call.enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                        progressBarLayout.setVisibility(View.VISIBLE);
+                        if (response.code() == 200) {
+
+                            if (response.isSuccessful()) {
+                                Log.e(TAG, finalI+ " onResponse: "+(sampleImages.size()-1));
+                                if (finalI == sampleImages.size() - 1) {
+                                    Intent intent = new Intent(SampleImagesActivity.this, MainDashBoard.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            } else {
+                                Log.e(TAG, "onResponse: error --->" + TextStreamsKt.readText(response.errorBody().charStream()));
+                                if (response.body().toString().contains("Duplicate job exists"))
+                                    Toast.makeText(SampleImagesActivity.this, "" + response.body(), Toast.LENGTH_SHORT).show();
+//                            Log.e("TAG", "onResponse: " + response.body());
+
+                            }
+                        } else {
+                            if (response.errorBody() != null) {
+                                progressBarLayout.setVisibility(View.GONE);
+                                Toast.makeText(SampleImagesActivity.this, "" + TextStreamsKt.readText(response.errorBody().charStream()), Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, " onResponse: error  pata nahi  " + TextStreamsKt.readText(response.errorBody().charStream()));
+
+
+//                            JSONObject jsonObj;
+//                            try {
+//                                jsonObj = new JSONObject(TextStreamsKt.readText(response.errorBody().charStream()));
+//                                Toast.makeText(SampleImagesActivity.this, "" + jsonObj.getString("msg"), Toast.LENGTH_SHORT).show();
+//                                Log.e(TAG, "onResponse:  error  ky aho rahra hai " + jsonObj.getString("msg"));
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+
+                            }
+
+                        }
+//                    try {
+//                        JSONObject object=new JSONObject(new Gson().toJson(response.body()));
+//                        Log.e("TAG", "onResponse: "+response );
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        Log.e(TAG, "onFailure: " + call.toString());
+                        progressBarLayout.setVisibility(View.INVISIBLE);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void showCustomDialog(ArrayList<Representatives> list, Representatives rep) {
+        final String[] status = {""};
+        Dialog dialog1 = new Dialog(this);
+        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog1.setCancelable(false);
+        dialog1.setContentView(R.layout.loading_dialgo);
+        TextView next = dialog1.findViewById(R.id.next);
+        EditText jobName = dialog1.findViewById(R.id.show_image_alert_enter_enter_job);
+        jobName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (jobName.getText().equals("")) {
+                    next.setEnabled(false);
+                    next.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkGray)));
+                } else {
+                    next.setEnabled(true);
+                    next.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.primary)));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                next.setEnabled(true);
+                next.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.primary)));
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!TextUtils.isEmpty(jobName.getText().toString())) {
+                    rep.setName(jobName.getText().toString());
+                    fastAndroidNtworking(list, rep);
+                    dialog1.dismiss();
+                } else {
+                    jobName.setError("Enter uniques name");
+                }
+            }
+
+        });
+
+        dialog1.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (jobPostRequest != null) {
+            jobPostRequest.cancel();
+        }
+    }
+
+
 }

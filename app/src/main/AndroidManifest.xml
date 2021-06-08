@@ -23,11 +23,7 @@
         <activity android:name=".activities.Representative_detail" />
         <activity android:name=".activities.SampleImagesActivity">
 
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+Main
 
         </activity>
         <activity android:name=".activities.UploadSignature">
@@ -49,9 +45,9 @@
         </activity>
         <activity android:name=".activities.SplashScreen">
              <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+                         <action android:name="android.intent.action.MAIN" />
+                         <category android:name="android.intent.category.LAUNCHER" />
+                         </intent-filter>
         </activity>
         <activity android:name=".activities.OCR" />
         <activity android:name=".activities.AddNewClient" >

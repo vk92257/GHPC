@@ -16,7 +16,9 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/accent</item>
         <!-- Customize your theme here. -->
     </style>
-
+    <style name="Progress_bar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorAccent">@color/secondry</item>
+        </style>
     <style name="Floatingbtn" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- ...whatever else you declare in your app theme.. -->
         <!-- Set colorSecondary to change background of FAB (backgroundTint) -->

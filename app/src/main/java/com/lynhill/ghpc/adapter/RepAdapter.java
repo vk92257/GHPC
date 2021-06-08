@@ -3,6 +3,7 @@ package com.lynhill.ghpc.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,10 +54,13 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Representatives rep = data.get(position);
         holder.username.setText(rep.getName());
+       if (rep.getEmali()!= null && !TextUtils.isEmpty(rep.getEmali().get(0)))
         holder.email.setText(rep.getEmali().get(0));
-        holder.address.setText(rep.getAddress());
-        holder.phone.setText(" "+rep.getPhoneNumber());
-        holder.root_rl.setOnClickListener(new View.OnClickListener() {
+        if (rep.getAddress()!= null && !TextUtils.isEmpty(rep.getAddress()))
+            holder.address.setText(rep.getAddress());
+        if (rep.getPhoneNumber()!= null && !TextUtils.isEmpty(rep.getPhoneNumber().get(0)))
+            holder.phone.setText(" "+rep.getPhoneNumber().get(0));
+            holder.root_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AddNewClient.class);

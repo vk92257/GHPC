@@ -3,8 +3,11 @@ package com.lynhill.ghpc.activities;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +35,7 @@ import com.lynhill.ghpc.util.Constants;
 import com.lynhill.ghpc.util.StorageManager;
 import com.lynhill.ghpc.util.Utils;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +47,7 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
     private int OCR_DATA_REQUEST = 675;
     private UserDataAdapter userDataAdapter;
     private ArrayList<String> strings;
-    private ImageView fillName, fillAddress, fillDOB, addPhoneNumber, addEmail;
+    private ImageView fillName, fillAddress, fillDOB, addPhoneNumber, addEmail, fillEmail, fillPhone;
     private Dialog dialog;
     private TextView solor, roofing, hvac;
     private String project = "";
@@ -143,15 +147,15 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
 
                 if (representatives1.getProject().equalsIgnoreCase("solar")) {
                     selectSolor();
-                    Log.e(TAG, "autoFillform: "+representatives1.getProject().equalsIgnoreCase("solar") );
+                    Log.e(TAG, "autoFillform: " + representatives1.getProject().equalsIgnoreCase("solar"));
                 }
                 if (representatives1.getProject().equalsIgnoreCase("Hvac")) {
                     selectHvac();
-                    Log.e(TAG, "autoFillform: "+representatives1.getProject().equalsIgnoreCase("hvac") );
+                    Log.e(TAG, "autoFillform: " + representatives1.getProject().equalsIgnoreCase("hvac"));
                 }
                 if (representatives1.getProject().equalsIgnoreCase("roofing")) {
                     selectRoofing();
-                    Log.e(TAG, "autoFillform: "+representatives1.getProject().equalsIgnoreCase("roofing") );
+                    Log.e(TAG, "autoFillform: " + representatives1.getProject().equalsIgnoreCase("roofing"));
                 }
             }
 
@@ -162,9 +166,10 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
             if (!TextUtils.isEmpty(representatives1.getDob()))
                 dob.getEditText().setText(representatives1.getDob());
 
-
-            emailArrayList.addAll(representatives1.getEmali());
-            phoneArrayList.addAll(representatives1.getPhoneNumber());
+            if (representatives1.getEmali() != null)
+                emailArrayList.addAll(representatives1.getEmali());
+            if (representatives1.getPhoneNumber() != null)
+                phoneArrayList.addAll(representatives1.getPhoneNumber());
 //            emailArrayList = Utils.getStringArrayList(this, Constants.PAPER_EMAIL);
 //            phoneArrayList = Utils.getStringArrayList(this, Constants.PAPER_CONTACT);
             if (!emailArrayList.isEmpty() && !phoneArrayList.isEmpty()) {
@@ -219,6 +224,8 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
         fillName = findViewById(R.id.fill_user_name);
         fillAddress = findViewById(R.id.fill_user_address);
         fillDOB = findViewById(R.id.fill_user_dob);
+        fillEmail = findViewById(R.id.fill_user_email);
+        fillPhone = findViewById(R.id.fill_user_phone_number);
         solor = findViewById(R.id.solar);
         hvac = findViewById(R.id.hvac);
         roofing = findViewById(R.id.roofing);
@@ -226,17 +233,19 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
         phoneList = findViewById(R.id.phone_list);
         clickListener();
         addingListView();
+
+        /**
+         * this code is used for checking that user is viewing the existing user profile
+         */
         if (StorageManager.getInstance(this).getCurrentUser() != -1) {
             Log.e(TAG, "onCreate: current user " + StorageManager.getInstance(this).getCurrentUser());
             autoFillform(StorageManager.getInstance(this).getCurrentUser());
         }
-//        showDialog();
     }
 
 
-    //    onclick's
     public void backpress(View view) {
-//        finish();
+//      finish();
     }
 
 
@@ -251,16 +260,29 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
         emailList.setAdapter(emailAdapter);
     }
 
+    /**
+     * this method is user for handling all the click on the views
+     */
 
     private void clickListener() {
         // scan click listener on find views
         addPhoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString()) && phoneNumber.getEditText().getText().length() < 15 && phoneNumber.getEditText().getText().length() > 6) {
-                    phoneArrayList.add(phoneNumber.getEditText().getText().toString());
-                    phoneNumber.getEditText().setText("");
-                    phoneAdapter.notifyDataSetChanged();
+                if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString())
+                        && phoneNumber.getEditText().getText().length() < 15
+                        && phoneNumber.getEditText().getText().length() > 6) {
+                    if (isPhone(phoneNumber.getEditText().getText().toString())) {
+                        phoneNumber.setErrorEnabled(false);
+                        phoneArrayList.add(phoneNumber.getEditText().getText().toString());
+                        phoneNumber.getEditText().setText("");
+                        phoneNumber.setErrorEnabled(false);
+                        phoneAdapter.notifyDataSetChanged();
+
+                    } else {
+                        phoneNumber.setErrorIconDrawable(null);
+                        phoneNumber.setError("Enter a valid phone number");
+                    }
                 } else {
                     phoneNumber.setErrorIconDrawable(null);
                     phoneNumber.setError("Enter you phone number.");
@@ -316,7 +338,18 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
                 showCustomDialog(2, "Address");
             }
         });
-
+        fillEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCustomDialog(4, "Email");
+            }
+        });
+        fillPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCustomDialog(5, "Phone number");
+            }
+        });
         solor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -433,24 +466,31 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
             email.setError("Enter your e-mail.");
             email.setErrorIconDrawable(null);
             return;
-
-
         }
-
-        if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString()) || !phoneArrayList.isEmpty()) {
+        if(!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString()) || !phoneArrayList.isEmpty()) {
             if (!TextUtils.isEmpty(phoneNumber.getEditText().getText().toString())) {
                 if (phoneNumber.getEditText().getText().length() < 6 && phoneNumber.getEditText().getText().length() > 15) {
-                    phoneNumber.setError("enter a valid phone number");
+                    phoneNumber.setError("Enter a valid phone number");
+                    return;
                 } else {
                     stringPhoneNumber = phoneNumber.getEditText().getText().toString();
-                    phoneNumber.setErrorEnabled(false);
-                    storageManager.setUserPhoneNumber(stringPhoneNumber);
-                    phoneArrayList.add(phoneNumber.getEditText().getText().toString());
-                    phoneNumber.getEditText().setText("");
-                    phoneAdapter.notifyDataSetChanged();
+                    if (isPhone(stringPhoneNumber)) {
+                        phoneNumber.setErrorEnabled(false);
+                        storageManager.setUserPhoneNumber(stringPhoneNumber);
+                        phoneArrayList.add(phoneNumber.getEditText().getText().toString());
+                        phoneNumber.getEditText().setText("");
+                        phoneAdapter.notifyDataSetChanged();
+                    } else {
+                        phoneNumber.setError("Enter a valid phone number");
+                        return;
+                    }
                 }
             } else {
-
+                if (phoneArrayList.isEmpty()){
+                    phoneNumber.setError("Enter your phone number.");
+                    phoneNumber.setErrorIconDrawable(null);
+                    return;
+                }
             }
         } else {
             phoneNumber.setError("Enter your phone number.");
@@ -472,6 +512,14 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
         startBankActivity();
     }
 
+    public static boolean isPhone(String text) {
+        if (!TextUtils.isEmpty(text)) {
+            return TextUtils.isDigitsOnly(text);
+        } else {
+            return false;
+        }
+    }
+
     private boolean isEmailValid(String email) {
         Pattern pattern;
         Matcher matcher;
@@ -487,7 +535,7 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
         startActivity(intent);
         finish();
     }
-//    sir code
+
 
     private void startBankActivity() {
         Intent intent = new Intent(this, MyWebView.class);
@@ -549,12 +597,17 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
         fillName.setVisibility(View.VISIBLE);
         fillDOB.setVisibility(View.VISIBLE);
         fillAddress.setVisibility(View.VISIBLE);
+        fillEmail.setVisibility(View.VISIBLE);
+        fillPhone.setVisibility(View.VISIBLE);
+
     }
 
     private void hideFillFormOption() {
         fillName.setVisibility(View.GONE);
         fillDOB.setVisibility(View.GONE);
         fillAddress.setVisibility(View.GONE);
+        fillEmail.setVisibility(View.GONE);
+        fillPhone.setVisibility(View.GONE);
     }
 
     @Override
@@ -576,6 +629,14 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
         } else if (i == 3) {
             Log.e(TAG, "onClick: " + i + " " + info);
             dob.getEditText().setText(info);
+            dialog.dismiss();
+        } else if (i == 4) {
+            Log.e(TAG, "onClick: " + i + " " + info);
+            email.getEditText().setText(info);
+            dialog.dismiss();
+        } else if (i == 5) {
+            Log.e(TAG, "onClick: " + i + " " + info);
+            phoneNumber.getEditText().setText(info);
             dialog.dismiss();
         }
 
@@ -611,4 +672,6 @@ public class AddNewClient extends BaseActivity implements UserInfoListener {
             return convertView;
         }
     }
+
+
 }

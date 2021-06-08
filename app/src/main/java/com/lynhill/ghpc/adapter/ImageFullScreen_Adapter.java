@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.lynhill.ghpc.R;
 
 import java.net.URI;
@@ -33,7 +34,8 @@ public class ImageFullScreen_Adapter extends RecyclerView.Adapter<ImageFullScree
 
     @Override
     public void onBindViewHolder(@NonNull ImageHolder holder, int position) {
-        holder.fullimage_iv.setImageURI(Uri.parse(data.get(position)));
+//        holder.fullimage_iv.setImageURI(Uri.parse(data.get(position)));
+        Glide.with(context).load(data.get(position)).into(holder.fullimage_iv);
     }
 
     @Override
