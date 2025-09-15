@@ -11,12 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
@@ -24,7 +28,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.android.material.textfield.TextInputLayout;
+
 import com.lynhill.ghpc.BuildConfig;
 import com.lynhill.ghpc.R;
 import com.lynhill.ghpc.adapter.AddMoreAdapter;
@@ -34,9 +40,12 @@ import com.lynhill.ghpc.util.StorageManager;
 import com.lynhill.ghpc.util.Utils;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,9 +56,9 @@ public class UploadSignature extends BaseActivity {
     private static final int REQUEST_CAMERA_CODE = 214;
     private TextInputLayout userName, address, dob, email, phoneNumber;
     String stringName, stringAddress, stringDob, stringEmail, stringPhoneNumber;
-    ImageView signature, signatureClikc, addPhoneNumber, addEmail;
+    ImageView signature, signatureClick, addPhoneNumber, addEmail;
     private String currentPhotoPath;
-    private boolean haveSignature = false;
+    private boolean haveSignature = true;
     ArrayList<String> phoneArrayList = new ArrayList<>();
     ArrayList<String> emailArrayList = new ArrayList<>();
     AddMoreAdapter phoneAdapter;
@@ -59,6 +68,7 @@ public class UploadSignature extends BaseActivity {
     private int requestPermissionID = 769;
     private Uri uri;
     private Intent intent;
+    private boolean flag = false;
 
 
     @Override
@@ -75,7 +85,8 @@ public class UploadSignature extends BaseActivity {
         if (position != -1) {
             intent.putExtra("position", position);
             Representatives representatives = Utils.getArrayList(this, Constants.REPRESENTATIVE_LIST).get(position);
-            signature.setImageURI(Uri.parse(representatives.getSignature()));
+            if (representatives.getSignature() != null)
+                mSignaturePad.setSignatureBitmap(StringToBitMap(representatives.getSignature()));
             haveSignature = true;
         }
     }
@@ -83,8 +94,8 @@ public class UploadSignature extends BaseActivity {
     private void findViews() {
         addPhoneNumber = findViewById(R.id.add_phone);
         addEmail = findViewById(R.id.add_email);
-        signature = findViewById(R.id.signature);
-        signatureClikc = findViewById(R.id.signature_click);
+//        signature = findViewById(R.id.signature);
+        signatureClick = findViewById(R.id.signature_click);
         userName = findViewById(R.id.username_til);
         address = findViewById(R.id.user_address_layout);
         dob = findViewById(R.id.user_dob_layout);
@@ -92,6 +103,7 @@ public class UploadSignature extends BaseActivity {
         phoneNumber = findViewById(R.id.user_phone_number_layout);
         emailList = findViewById(R.id.email_list);
         phoneList = findViewById(R.id.phone_list);
+        signatureLayout();
         clickListenre();
         autoFillform();
 //        if (phoneArrayList.isEmpty()) {
@@ -101,12 +113,86 @@ public class UploadSignature extends BaseActivity {
         //        showDialog();
     }
 
+    private SignaturePad mSignaturePad;
+    private Bitmap bitmap;
+    String path;
+    private static final String IMAGE_DIRECTORY = "/signdemo";
+
+    private void signatureLayout() {
+        mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
+        mSignaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
+
+            @Override
+            public void onStartSigning() {
+                //Event triggered when the pad is touched
+            }
+
+            @Override
+            public void onSigned() {
+                //Event triggered when the pad is signed
+                haveSignature=true;
+            }
+
+            @Override
+            public void onClear() {
+                //Event triggered when the pad is cleared
+            }
+        });
+
+
+//        signatureView = (SignatureView) findViewById(R.id.signature_view);
+//
+//
+//        if (flag) {
+//            haveSignature = true;
+//        }
+//
+//        bitmap = signatureView.getSignatureBitmap();
+//        path = saveImage(bitmap);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //Clear the Activity's bundle of the subsidiary fragments' bundles.
+        outState.clear();
+    }
+
+    public String saveImage(Bitmap myBitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        File wallpaperDirectory = new File(
+                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY /*iDyme folder*/);
+        // have the object build the directory structure, if needed.
+        if (!wallpaperDirectory.exists()) {
+            wallpaperDirectory.mkdirs();
+            Log.d("hhhhh",wallpaperDirectory.toString());
+        }
+
+        try {
+            File f = new File(wallpaperDirectory, Calendar.getInstance()
+                    .getTimeInMillis() + ".jpg");
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            MediaScannerConnection.scanFile(UploadSignature.this,
+                    new String[]{f.getPath()},
+                    new String[]{"image/jpeg"}, null);
+            fo.close();
+            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+
+            return f.getAbsolutePath();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return "";
+
+    }
 
     //    onclick's
     public void backpress(View view) {
         finish();
     }
-
 
     private void addingListView() {
         phoneList.setLayoutManager(new LinearLayoutManager(this));
@@ -143,10 +229,13 @@ public class UploadSignature extends BaseActivity {
                 }
             }
         });
-        signatureClikc.setOnClickListener(new View.OnClickListener() {
+        signatureClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkPermissions();
+                mSignaturePad.clear();
+//                signatureView.clearCanvas();
+//
+//                checkPermissions();
             }
         });
     }
@@ -354,8 +443,10 @@ public class UploadSignature extends BaseActivity {
             Toast.makeText(this, "Please upload your signature.", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            storageManager.setUserSignature(currentPhotoPath);
-            representatives1.setSignature(currentPhotoPath);
+//            saveImage(mSignaturePad.getSignatureBitmap());
+            String bitmap = BitMapToString(mSignaturePad.getSignatureBitmap());
+            storageManager.setUserSignature(bitmap);
+            representatives1.setSignature(bitmap);
         }
 
         if (!emailArrayList.isEmpty() && !phoneArrayList.isEmpty()) {
@@ -365,10 +456,8 @@ public class UploadSignature extends BaseActivity {
             Utils.saveStringArrayList(this, phoneArrayList, Constants.PAPER_CONTACT);
 //            Log.e(TAG, "Signup_click: " + emailArrayList.size() + "   " + phoneArrayList.size());
         }
-
         Log.e(TAG, "Signup_click: " + storageManager.getUserProject());
         representatives1.setProject(storageManager.getUserProject());
-
         uploadProcess();
     }
 
@@ -388,6 +477,36 @@ public class UploadSignature extends BaseActivity {
         return matcher.matches();
     }
 
+    public Bitmap StringToBitMap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0,
+                    encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+
+    public String BitMapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mSignaturePad != null) {
+            mSignaturePad.getSignatureBitmap().recycle();
+            mSignaturePad.clear();
+            mSignaturePad.clearView();
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -395,8 +514,6 @@ public class UploadSignature extends BaseActivity {
         if (grantResults.length > 0 && requestCode == requestPermissionID) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 dispatchTakePictureIntent();
-                // Do_SOme_Operation();
-//                Toast.makeText(this, " granted", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();

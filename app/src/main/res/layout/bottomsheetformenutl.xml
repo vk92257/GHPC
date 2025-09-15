@@ -3,13 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="2dp"
+    android:backgroundTint="#ddd"
     android:background="@drawable/round_corner_"
     android:orientation="vertical">
 
 
     <RelativeLayout
+        android:background="@color/light_black"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="60dp">
 
         <TextView
             android:id="@+id/txt_dia"
@@ -23,7 +25,7 @@
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/roboto_bold"
             android:text="Select"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="20dp"
             android:textStyle="bold" />
 
@@ -36,7 +38,7 @@
             android:layout_marginEnd="10dp"
             android:padding="2.5dp"
             android:src="@drawable/ic_baseline_close_24"
-            android:tint="@color/black" />
+            android:tint="@color/white" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView

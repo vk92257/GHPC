@@ -21,15 +21,14 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-        >
+            android:layout_height="50dp">
 
             <ImageView
-                android:onClick="backpress"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
+                android:onClick="backpress"
                 android:src="@drawable/ic_baseline_keyboard_backspace_24"
                 app:tint="@color/black" />
 
@@ -47,232 +46,93 @@
                 tools:ignore="DuplicateIds" />
 
 
-
-
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
-
-
 
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="5dp"
         android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@id/toolbarsales">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
-            <!--        fontPath="fonts/Nunito-Bold.ttf"-->
-            <TextView
-                fontPath="fonts/gothambold.otf"
-                android:id="@+id/representatives_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_round_right"
-                android:elevation="3dp"
-                android:fontFamily="@font/roboto_bold"
-                android:paddingStart="18dp"
-                android:paddingTop="4dp"
-                android:paddingRight="18dp"
-                android:paddingBottom="4dp"
-                android:text="Enter your information"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:visibility="visible"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbarsales" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="3dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/darkGray"
-                android:orientation="horizontal"
-                android:paddingStart="10dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/scan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:paddingTop="10sp"
-                    android:paddingBottom="10sp"
-                    android:text="@string/scan"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
-
-                <ImageView
-                    android:id="@+id/scan_code"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="10sp"
-                    android:padding="9.5dp"
-                    android:src="@drawable/ic_scanning"
-                    android:tint="@color/primary" />
-
-            </RelativeLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/username_til"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:layout_marginBottom="7dp"
-                    android:background="@drawable/round_corner_btn"
-                    android:textColorHint="@color/light_black">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/username_tiet"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                       android:background="@color/white"
-                        android:hint="@string/username"
-                        android:inputType="textPersonName"
-                        android:textColor="@color/light_black"
-                        android:textColorHint="@color/light_black"
-                        android:paddingEnd="45dp"
-                        android:layout_marginRight="4dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginBottom="2dp"
-                        android:layout_marginTop="2dp"/>
-
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/fill_user_name"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center|right"
-                    android:layout_marginEnd="10sp"
-                    android:padding="9.5dp"
-                    android:src="@drawable/ic_contact_form"
-                    android:tint="@color/primary"
-                    android:visibility="gone" />
-
-            </FrameLayout>
-
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/user_address_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:layout_marginBottom="7dp"
-                    android:background="@drawable/round_corner_btn"
-                    android:textColorHint="@color/light_black">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/user_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:hint="@string/enter_address"
-                        android:inputType="textPersonName"
-                        android:textColor="@color/light_black"
-                        android:textColorHint="@color/light_black"
-                        android:paddingEnd="45dp"
-                        android:layout_marginRight="4dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginBottom="2dp"
-                        android:layout_marginTop="2dp"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/fill_user_address"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center|right"
-                    android:layout_marginEnd="10sp"
-                    android:padding="9.5dp"
-                    android:src="@drawable/ic_contact_form"
-                    android:tint="@color/primary"
-                    android:visibility="gone" />
-
-            </FrameLayout>
-
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/user_dob_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:layout_marginBottom="7dp"
-                    android:background="@drawable/round_corner_btn"
-                    android:textColorHint="@color/light_black">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/user_dob"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:hint="Enter date of birth"
-                        android:inputType="textPersonName"
-                        android:textColor="@color/light_black"
-                        android:textColorHint="@color/light_black"
-                        android:paddingEnd="45dp"
-                        android:layout_marginRight="4dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginBottom="2dp"
-                        android:layout_marginTop="2dp"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/fill_user_dob"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center|right"
-                    android:layout_marginEnd="10sp"
-                    android:padding="9.5dp"
-                    android:src="@drawable/ic_contact_form"
-                    android:tint="@color/primary"
-                    android:visibility="gone" />
-            </FrameLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:padding="10dp">
+                <!--        fontPath="fonts/Nunito-Bold.ttf"-->
+                <TextView
+                    android:id="@+id/representatives_id"
+                    fontPath="fonts/gothambold.otf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_round_right"
+                    android:elevation="3dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:paddingStart="18dp"
+                    android:paddingTop="4dp"
+                    android:paddingRight="18dp"
+                    android:paddingBottom="4dp"
+                    android:text="Enter your information"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:visibility="visible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toolbarsales" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginEnd="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/darkGray"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/scan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:paddingTop="10sp"
+                        android:paddingBottom="10sp"
+                        android:text="@string/scan"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/scan_code"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10sp"
+                        android:padding="9.5dp"
+                        android:src="@drawable/ic_scanning"
+                        android:tint="@color/primary" />
+
+                </RelativeLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/email_til"
+                        android:id="@+id/username_til"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="7dp"
@@ -281,7 +141,7 @@
                         android:textColorHint="@color/light_black">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/email_tiet"
+                            android:id="@+id/username_tiet"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="4dp"
@@ -289,46 +149,35 @@
                             android:layout_marginRight="4dp"
                             android:layout_marginBottom="2dp"
                             android:background="@color/white"
-                            android:hint="@string/email"
-                            android:inputType="textEmailAddress"
-                            android:paddingStart="10dp"
+                            android:hint="@string/username"
+                            android:inputType="textPersonName"
+                            android:paddingEnd="45dp"
                             android:textColor="@color/light_black"
                             android:textColorHint="@color/light_black" />
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/email_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <ImageView
-                        android:id="@+id/add_email"
+                        android:id="@+id/fill_user_name"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_gravity="right"
-                        android:layout_marginTop="25dp"
+                        android:layout_gravity="center|right"
                         android:layout_marginEnd="10sp"
                         android:padding="9.5dp"
-                        android:src="@drawable/ic_baseline_add_24"
+                        android:src="@drawable/ic_contact_form"
                         android:tint="@color/primary"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
+
                 </FrameLayout>
 
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible">
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/user_phone_number_layout"
+                        android:id="@+id/user_address_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="7dp"
@@ -337,7 +186,7 @@
                         android:textColorHint="@color/light_black">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/user_phone_number"
+                            android:id="@+id/user_address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="4dp"
@@ -345,32 +194,209 @@
                             android:layout_marginRight="4dp"
                             android:layout_marginBottom="2dp"
                             android:background="@color/white"
-                            android:hint="Enter phone Number"
-                            android:inputType="number"
-                            android:maxLength="10"
+                            android:hint="@string/enter_address"
+                            android:inputType="textPersonName"
+                            android:paddingEnd="45dp"
                             android:textColor="@color/light_black"
                             android:textColorHint="@color/light_black" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/phone_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <ImageView
-                        android:id="@+id/add_phone"
+                        android:id="@+id/fill_user_address"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_gravity="right"
-                        android:layout_marginTop="25dp"
+                        android:layout_gravity="center|right"
                         android:layout_marginEnd="10sp"
                         android:padding="9.5dp"
-                        android:src="@drawable/ic_baseline_add_24"
+                        android:src="@drawable/ic_contact_form"
                         android:tint="@color/primary"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
+
                 </FrameLayout>
 
-            </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/user_dob_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginBottom="7dp"
+                        android:background="@drawable/round_corner_btn"
+                        android:textColorHint="@color/light_black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/user_dob"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginRight="4dp"
+                            android:layout_marginBottom="2dp"
+                            android:background="@color/white"
+                            android:hint="Enter date of birth"
+                            android:inputType="textPersonName"
+                            android:paddingEnd="45dp"
+                            android:textColor="@color/light_black"
+                            android:textColorHint="@color/light_black" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/fill_user_dob"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center|right"
+                        android:layout_marginEnd="10sp"
+                        android:padding="9.5dp"
+                        android:src="@drawable/ic_contact_form"
+                        android:tint="@color/primary"
+                        android:visibility="gone" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/email_til"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:layout_marginBottom="7dp"
+                            android:background="@drawable/round_corner_btn"
+                            android:textColorHint="@color/light_black">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/email_tiet"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginRight="4dp"
+                                android:layout_marginBottom="2dp"
+                                android:background="@color/white"
+                                android:hint="@string/email"
+                                android:inputType="textEmailAddress"
+                                android:paddingStart="10dp"
+                                android:paddingRight="45dp"
+                                android:textColor="@color/light_black"
+                                android:textColorHint="@color/light_black" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/email_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <ImageView
+
+                            android:id="@+id/add_email"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="right"
+                            android:layout_marginTop="25dp"
+                           android:layout_marginRight="10dp"
+                            android:padding="9.5dp"
+                            android:src="@drawable/ic_baseline_add_24"
+                            android:tint="@color/primary"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/fill_user_email"
+                            android:layout_width="40dp"
+                            android:layout_marginTop="25dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="right"
+                            android:layout_marginEnd="40sp"
+                            android:padding="9.5dp"
+                            android:src="@drawable/ic_contact_form"
+                            android:tint="@color/primary"
+                            android:visibility="gone" />
+
+
+
+                    </FrameLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/user_phone_number_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:layout_marginBottom="7dp"
+                            android:background="@drawable/round_corner_btn"
+                            android:textColorHint="@color/light_black">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/user_phone_number"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginRight="4dp"
+                                android:layout_marginBottom="2dp"
+                                android:background="@color/white"
+                                android:hint="Enter phone Number"
+                                android:inputType="number"
+                                android:paddingRight="45dp"
+                                android:maxLength="10"
+                                android:textColor="@color/light_black"
+                                android:textColorHint="@color/light_black" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/phone_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <ImageView
+                            android:id="@+id/add_phone"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="right"
+                            android:layout_marginTop="25dp"
+                           android:layout_marginRight="10dp"
+                            android:padding="9.5dp"
+                            android:src="@drawable/ic_baseline_add_24"
+                            android:tint="@color/primary"
+                            android:visibility="visible" />
+
+
+                        <ImageView
+                            android:id="@+id/fill_user_phone_number"
+                            android:layout_width="40dp"
+                            android:layout_marginTop="25dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="40dp"
+                            android:padding="9.5dp"
+                            android:src="@drawable/ic_contact_form"
+                            android:tint="@color/primary"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
+                </LinearLayout>
 
 
             </LinearLayout>
@@ -448,27 +474,65 @@
                 android:layout_height="200dp"
                 android:layout_marginTop="10dp">
 
-                <ImageView
-                    android:id="@+id/signature"
+
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/signature"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:scaleType="centerCrop" />-->
+
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/signature_click"-->
+                <!--                    android:layout_width="100dp"-->
+                <!--                    android:layout_height="100dp"-->
+                <!--                    android:layout_gravity="center"-->
+                <!--                    android:alpha="0.3"-->
+                <!--                    android:scaleType="centerCrop"-->
+                <!--                    android:src="@drawable/ic_signature_24"-->
+                <!--                    android:tint="@color/black" />-->
+
+<!--                <com.kyanogen.signatureview.SignatureView-->
+<!--                    xmlns:sign="http://schemas.android.com/apk/res-auto"-->
+<!--                    android:id="@+id/signature_view"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    sign:penSize="5dp"-->
+<!--                    sign:backgroundColor="#ffffff"-->
+<!--                    sign:penColor="#000000"-->
+<!--                    sign:enableSignature="true"/>-->
+
+                <com.github.gcacace.signaturepad.views.SignaturePad
+                    android:background="@drawable/backgroun_project"
+                    android:layout_margin="10dp"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/signature_pad"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop" />
+                    android:layout_height="match_parent"
+                    app:penColor="@android:color/black"
+                    />
 
                 <ImageView
                     android:id="@+id/signature_click"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="right|bottom"
+                    android:layout_margin="20dp"
                     android:alpha="0.3"
+                    android:padding="5dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_signature_24"
+                    android:src="@drawable/ic_reload"
                     android:tint="@color/black" />
+
+
             </FrameLayout>
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="40dp"
+                android:layout_marginEnd="30dp"
                 android:layout_marginBottom="50dp"
                 android:background="@drawable/round_edge_btn"
                 android:onClick="Signup_click"
